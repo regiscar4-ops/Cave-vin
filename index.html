@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#6B2737">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -11,262 +11,427 @@
 <title>Ma Cave à Vin</title>
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
 <style>
+/* ═══════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --wine:#6B2737;--wine-mid:#9B3A50;--wine-light:#F5E8EC;
+  --wine:#6B2737;--wine-mid:#9B3A50;--wine-light:#F5E8EC;--wine-dark:#4a1a25;
   --gold:#C4932A;--gold-bg:#FDF6E9;
-  --bg:#ffffff;--bg2:#f7f5f3;--bg3:#f0ede9;
+  --bg:#ffffff;--bg2:#f7f5f3;--bg3:#ede9e5;
   --text:#1a1a1a;--text2:#6b6b6b;--text3:#a0a0a0;
-  --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);
-  --success:#1a7a4a;--success-bg:#eaf5ef;
-  --danger:#c0392b;--danger-bg:#fdf0ef;
-  --warning:#b07d0a;--warning-bg:#fef8ec;
-  --radius:8px;--radius-lg:12px;
+  --border:rgba(0,0,0,0.09);--border2:rgba(0,0,0,0.16);
+  --success:#1a7a4a;--success-bg:#eaf5ef;--success-border:#b3dfc8;
+  --danger:#c0392b;--danger-bg:#fdf0ef;--danger-border:#f5b8b3;
+  --warning:#b07d0a;--warning-bg:#fef8ec;--warning-border:#f5dfa0;
+  --info:#1a6fa8;--info-bg:#e8f3fb;
+  --radius:10px;--radius-lg:16px;--radius-xl:20px;
+  --shadow:0 2px 12px rgba(0,0,0,0.08);
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 }
 @media(prefers-color-scheme:dark){
   :root{
-    --bg:#1a1a1a;--bg2:#242424;--bg3:#2e2e2e;
+    --bg:#1a1a1a;--bg2:#252525;--bg3:#2f2f2f;
     --text:#f0f0f0;--text2:#a0a0a0;--text3:#606060;
-    --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.18);
+    --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.16);
     --wine-light:#3a1520;--gold-bg:#2a2010;
+    --success-bg:#0f3a25;--danger-bg:#3a1010;--warning-bg:#2a2000;
   }
 }
-html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:16px}
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--text);font-size:16px;overflow:hidden}
 
-/* ── SPLASH ── */
-#splash{position:fixed;inset:0;background:var(--wine);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;transition:opacity .5s}
+/* ═══════════════════════════════════════
+   SPLASH SCREEN
+═══════════════════════════════════════ */
+#splash{position:fixed;inset:0;background:linear-gradient(160deg,var(--wine-dark),var(--wine));display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .6s ease}
 #splash.hide{opacity:0;pointer-events:none}
-.splash-icon{font-size:64px;color:white;margin-bottom:1rem;animation:pulse 1.5s ease-in-out infinite}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-.splash-title{font-size:28px;font-weight:600;color:white;letter-spacing:.5px}
-.splash-sub{font-size:14px;color:rgba(255,255,255,.65);margin-top:.5rem}
-.splash-bar{width:160px;height:3px;background:rgba(255,255,255,.2);border-radius:2px;margin-top:2.5rem;overflow:hidden}
-.splash-progress{height:3px;background:white;border-radius:2px;animation:load 1.8s ease-in-out forwards}
-@keyframes load{0%{width:0}100%{width:100%}}
+.splash-icon{font-size:56px;color:rgba(255,255,255,0.9);margin-bottom:1.25rem;animation:splashPulse 2s ease-in-out infinite}
+@keyframes splashPulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.06);opacity:1}}
+.splash-title{font-size:30px;font-weight:600;color:white;letter-spacing:.3px}
+.splash-subtitle{font-size:14px;color:rgba(255,255,255,.6);margin-top:.4rem}
+.splash-bar{width:140px;height:3px;background:rgba(255,255,255,.2);border-radius:2px;margin-top:2.5rem;overflow:hidden}
+.splash-fill{height:3px;background:rgba(255,255,255,.8);border-radius:2px;width:0;animation:splashLoad 1.8s ease forwards}
+@keyframes splashLoad{to{width:100%}}
 
-/* ── PIN ── */
-#pin-screen{position:fixed;inset:0;background:var(--wine);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:900;transition:opacity .4s}
-#pin-screen.hide{opacity:0;pointer-events:none}
-.pin-logo{font-size:40px;color:white;margin-bottom:1.5rem}
-.pin-title{font-size:18px;font-weight:500;color:white;margin-bottom:.5rem}
-.pin-sub{font-size:13px;color:rgba(255,255,255,.65);margin-bottom:2rem;text-align:center;max-width:260px}
-.pin-dots{display:flex;gap:16px;margin-bottom:2rem}
-.pin-dot{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.5);background:transparent;transition:background .15s}
+/* ═══════════════════════════════════════
+   PIN SCREEN
+═══════════════════════════════════════ */
+#pin-screen{position:fixed;inset:0;background:linear-gradient(160deg,var(--wine-dark),var(--wine));display:none;flex-direction:column;align-items:center;justify-content:center;z-index:9000}
+#pin-screen.show{display:flex}
+.pin-logo{font-size:36px;color:rgba(255,255,255,.85);margin-bottom:1.5rem}
+.pin-title{font-size:19px;font-weight:500;color:white;margin-bottom:.4rem}
+.pin-subtitle{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:2rem;text-align:center;max-width:240px;line-height:1.5}
+.pin-dots{display:flex;gap:14px;margin-bottom:2rem}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.4);transition:all .15s}
 .pin-dot.filled{background:white;border-color:white}
-.pin-dot.error{border-color:#ff6b6b;background:#ff6b6b}
-.pin-grid{display:grid;grid-template-columns:repeat(3,72px);gap:12px}
-.pin-btn{width:72px;height:72px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:white;font-size:22px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:background .1s;-webkit-user-select:none;user-select:none}
-.pin-btn:active{background:rgba(255,255,255,.25)}
-.pin-btn-sub{font-size:8px;letter-spacing:1px;opacity:.6;margin-top:1px}
-.pin-btn.wide{border-radius:var(--radius-lg);font-size:14px}
-.pin-error-msg{font-size:13px;color:#ff9999;margin-top:1rem;min-height:20px;text-align:center}
-.pin-setup-link{font-size:12px;color:rgba(255,255,255,.5);margin-top:1.5rem;cursor:pointer;text-decoration:underline}
+.pin-dot.error{background:#ff6b6b;border-color:#ff6b6b;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.pin-grid{display:grid;grid-template-columns:repeat(3,68px);gap:10px}
+.pin-btn{width:68px;height:68px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:white;font-size:21px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;transition:background .1s;-webkit-user-select:none;user-select:none}
+.pin-btn:active{background:rgba(255,255,255,.28)}
+.pin-sub{font-size:8px;letter-spacing:1.5px;opacity:.55}
+.pin-error-msg{font-size:13px;color:#ffaaaa;margin-top:1rem;min-height:18px;text-align:center}
+.pin-link{font-size:12px;color:rgba(255,255,255,.4);margin-top:1.5rem;cursor:pointer;text-decoration:underline}
 
-/* ── APP ── */
-#app{max-width:430px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;background:var(--bg)}
-.header{background:var(--wine);color:white;padding:1.1rem 1rem .9rem}
-.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem}
-.header h1{font-size:17px;font-weight:500;color:white;display:flex;align-items:center;gap:8px}
+/* ═══════════════════════════════════════
+   AUTH SCREEN
+═══════════════════════════════════════ */
+#auth-screen{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;z-index:8000}
+#auth-screen.show{display:flex}
+.auth-logo{font-size:44px;color:var(--wine);margin-bottom:1rem}
+.auth-title{font-size:22px;font-weight:600;color:var(--text);margin-bottom:.4rem;text-align:center}
+.auth-subtitle{font-size:14px;color:var(--text2);text-align:center;margin-bottom:2rem;line-height:1.5}
+.auth-form{width:100%;max-width:360px}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--bg3);border-radius:var(--radius);padding:3px;margin-bottom:1.5rem}
+.auth-tab{padding:.55rem;font-size:14px;border-radius:8px;border:none;background:none;color:var(--text2);cursor:pointer;transition:all .15s;font-family:var(--font)}
+.auth-tab.active{background:var(--bg);color:var(--text);font-weight:500;box-shadow:var(--shadow)}
+.auth-field{margin-bottom:1rem}
+.auth-label{font-size:12px;color:var(--text2);margin-bottom:5px;display:block;font-weight:500}
+.auth-input{width:100%;padding:.7rem .85rem;border:1.5px solid var(--border2);border-radius:var(--radius);font-size:15px;color:var(--text);background:var(--bg);font-family:var(--font);outline:none;transition:border-color .15s}
+.auth-input:focus{border-color:var(--wine-mid)}
+.auth-btn{width:100%;padding:.8rem;background:var(--wine);color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;font-family:var(--font);margin-top:.5rem;transition:opacity .15s}
+.auth-btn:active{opacity:.85}
+.auth-link{font-size:13px;color:var(--wine);text-align:center;margin-top:1rem;cursor:pointer;display:block}
+.auth-error{font-size:13px;color:var(--danger);background:var(--danger-bg);border-radius:var(--radius);padding:.6rem .85rem;margin-bottom:1rem;display:none}
+.auth-error.show{display:block}
+.auth-success{font-size:13px;color:var(--success);background:var(--success-bg);border-radius:var(--radius);padding:.6rem .85rem;margin-bottom:1rem;display:none}
+.auth-success.show{display:block}
+
+/* ═══════════════════════════════════════
+   ONBOARDING
+═══════════════════════════════════════ */
+#onboarding{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;z-index:7000}
+#onboarding.show{display:flex}
+.ob-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem}
+.ob-skip{font-size:14px;color:var(--text3);cursor:pointer;padding:.25rem .5rem}
+.ob-slides{flex:1;display:flex;overflow:hidden}
+.ob-slide{min-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 2.5rem;text-align:center;transition:transform .35s ease}
+.ob-icon{font-size:64px;color:var(--wine);margin-bottom:1.5rem}
+.ob-title{font-size:22px;font-weight:600;color:var(--text);margin-bottom:.75rem;line-height:1.3}
+.ob-desc{font-size:15px;color:var(--text2);line-height:1.65;max-width:300px}
+.ob-footer{padding:1.5rem 1.25rem 2rem}
+.ob-dots{display:flex;gap:6px;justify-content:center;margin-bottom:1.25rem}
+.ob-dot{width:7px;height:7px;border-radius:50%;background:var(--bg3);transition:all .2s}
+.ob-dot.active{background:var(--wine);width:20px;border-radius:4px}
+.ob-next{width:100%;padding:.8rem;background:var(--wine);color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;font-family:var(--font)}
+
+/* ═══════════════════════════════════════
+   APP LAYOUT
+═══════════════════════════════════════ */
+#app{display:none;flex-direction:column;height:100dvh;max-width:430px;margin:0 auto;background:var(--bg);position:relative}
+#app.show{display:flex}
+.offline-bar{display:none;background:var(--warning-bg);color:var(--warning);font-size:12px;padding:5px 1rem;text-align:center;border-bottom:.5px solid var(--warning-border)}
+.offline-bar.show{display:block}
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+.header{background:linear-gradient(160deg,var(--wine-dark),var(--wine));color:white;padding:1rem 1rem .9rem;flex-shrink:0}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.header-title{font-size:18px;font-weight:500;color:white;display:flex;align-items:center;gap:8px}
 .header-actions{display:flex;gap:8px}
-.hdr-btn{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}
+.hdr-btn{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:background .1s}
+.hdr-btn:active{background:rgba(255,255,255,.28)}
 .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.stat-card{background:rgba(255,255,255,.12);border-radius:var(--radius);padding:.55rem .5rem;text-align:center}
-.stat-num{font-size:19px;font-weight:500;color:white}
+.stat-card{background:rgba(255,255,255,.12);border-radius:var(--radius);padding:.55rem .5rem;text-align:center;backdrop-filter:blur(4px)}
+.stat-num{font-size:19px;font-weight:600;color:white}
 .stat-lbl{font-size:10px;color:rgba(255,255,255,.65);margin-top:1px}
-nav{display:flex;border-bottom:0.5px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:10}
-.nav-btn{flex:1;padding:.65rem .2rem;font-size:10px;color:var(--text2);background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;border-bottom:2px solid transparent;transition:color .15s}
-.nav-btn i{font-size:19px}
+.queue-badge{font-size:10px;background:rgba(255,200,0,.25);color:rgba(255,220,100,.9);padding:2px 8px;border-radius:10px;margin-left:6px;display:none}
+.queue-badge.show{display:inline}
+
+/* ═══════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════ */
+nav{display:flex;border-bottom:.5px solid var(--border);background:var(--bg);flex-shrink:0;position:relative;z-index:10}
+.nav-btn{flex:1;padding:.6rem .2rem;font-size:10px;color:var(--text3);background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;border-bottom:2.5px solid transparent;transition:all .15s;font-family:var(--font)}
+.nav-btn i{font-size:20px}
 .nav-btn.active{color:var(--wine);border-bottom-color:var(--wine)}
-.content{flex:1;overflow-y:auto;padding:1rem;padding-bottom:2rem}
-.section{display:none}.section.active{display:block}
 
-/* ── COMPONENTS ── */
-input,select,textarea{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius);padding:.55rem .75rem;font-size:14px;color:var(--text);width:100%;outline:none;font-family:inherit}
-input:focus,select:focus{border-color:var(--wine-mid)}
-button{font-family:inherit;cursor:pointer}
-.chip{font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer}
+/* ═══════════════════════════════════════
+   CONTENT
+═══════════════════════════════════════ */
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.section{display:none;padding:1rem 1rem 5rem}
+.section.active{display:block}
+
+/* ═══════════════════════════════════════
+   COMPONENTS
+═══════════════════════════════════════ */
+input,select,textarea{background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);padding:.6rem .85rem;font-size:14px;color:var(--text);width:100%;outline:none;font-family:var(--font);transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--wine-mid)}
+.fg{margin-bottom:.9rem}
+.fg label{font-size:12px;color:var(--text2);margin-bottom:4px;display:block;font-weight:500}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn-primary{width:100%;padding:.75rem;background:var(--wine);color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;font-family:var(--font);transition:opacity .15s}
+.btn-primary:active{opacity:.85}
+.btn-secondary{width:100%;padding:.65rem;background:none;color:var(--text2);border:1.5px solid var(--border2);border-radius:var(--radius);font-size:14px;cursor:pointer;font-family:var(--font);margin-top:.5rem}
+.btn-danger{width:100%;padding:.65rem;background:var(--danger-bg);color:var(--danger);border:1.5px solid var(--danger-border);border-radius:var(--radius);font-size:14px;cursor:pointer;font-family:var(--font);margin-top:.5rem}
+.section-title{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.8px;margin-bottom:.75rem;text-transform:uppercase}
+.chip{font-size:12px;padding:5px 12px;border-radius:20px;border:1.5px solid var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
 .chip.active{background:var(--wine-light);color:var(--wine);border-color:var(--wine-mid)}
-.btn-primary{width:100%;padding:.75rem;background:var(--wine);color:white;border:none;border-radius:var(--radius);font-size:15px}
-.btn-secondary{width:100%;padding:.65rem;background:none;color:var(--text2);border:0.5px solid var(--border);border-radius:var(--radius);font-size:14px;margin-top:.5rem}
-.btn-danger{width:100%;padding:.65rem;background:var(--danger-bg);color:var(--danger);border:0.5px solid var(--danger);border-radius:var(--radius);font-size:14px;margin-top:.5rem}
-.claude-btn{width:100%;padding:.8rem;border:0.5px solid var(--border);border-radius:var(--radius-lg);background:var(--gold-bg);color:var(--gold);font-size:14px;display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:.85rem}
-.section-title{font-size:12px;font-weight:500;color:var(--text2);letter-spacing:.5px;margin-bottom:.75rem}
-.export-bar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
-.export-bar button{padding:.6rem;font-size:12px;border-radius:var(--radius);border:0.5px solid var(--border);background:var(--bg2);color:var(--text2);display:flex;align-items:center;gap:6px;justify-content:center}
-.search-bar{display:flex;gap:8px;margin-bottom:.85rem}
-.filter-row{display:flex;gap:6px;margin-bottom:.85rem;flex-wrap:wrap}
-.empty-state{text-align:center;padding:3rem 1rem;color:var(--text3)}
-.empty-state i{font-size:44px;display:block;margin-bottom:.75rem}
-.empty-state p{font-size:14px}
-.fab{display:flex;margin:1rem 0 0 auto;width:48px;height:48px;border-radius:50%;background:var(--wine);color:white;border:none;align-items:center;justify-content:center;font-size:24px}
+.filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-bottom:.85rem;scrollbar-width:none}
+.filter-row::-webkit-scrollbar{display:none}
+.empty-state{text-align:center;padding:3.5rem 1rem;color:var(--text3)}
+.empty-state i{font-size:48px;display:block;margin-bottom:.85rem;opacity:.5}
+.empty-state p{font-size:14px;line-height:1.6}
+.fab{display:flex;position:fixed;bottom:5rem;right:1rem;width:52px;height:52px;border-radius:50%;background:var(--wine);color:white;border:none;align-items:center;justify-content:center;font-size:24px;cursor:pointer;box-shadow:0 4px 16px rgba(107,39,55,.4);z-index:100;transition:transform .15s}
+.fab:active{transform:scale(.93)}
+.claude-btn{width:100%;padding:.85rem;border:1.5px solid var(--border2);border-radius:var(--radius-lg);background:var(--gold-bg);color:var(--gold);font-size:14px;cursor:pointer;display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:.85rem;font-family:var(--font);font-weight:500;transition:opacity .15s}
+.claude-btn:active{opacity:.8}
+.toast{position:fixed;bottom:5.5rem;left:50%;transform:translateX(-50%);background:rgba(30,30,30,.92);color:white;padding:10px 22px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;z-index:9000;backdrop-filter:blur(8px)}
+.toast.show{opacity:1}
+.toast.error{background:rgba(192,57,43,.92)}
+.toast.success{background:rgba(26,122,74,.92)}
 
-/* ── BOTTLE CARD ── */
-.bottle-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:.8rem 1rem;margin-bottom:.6rem;display:flex;gap:10px;align-items:flex-start}
-.bico{width:36px;height:36px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.c-rouge{background:var(--wine-light);color:var(--wine)}
-.c-blanc{background:#F5F0E8;color:#7A6020}
-.c-rosé{background:#FDE8EF;color:#993556}
-.c-bulle{background:#EAF3DE;color:#3B6D11}
+/* ═══════════════════════════════════════
+   BOTTLE CARDS
+═══════════════════════════════════════ */
+.search-bar{display:flex;gap:8px;margin-bottom:.85rem}
+.bottle-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:.85rem 1rem;margin-bottom:.6rem;display:flex;gap:10px;align-items:flex-start;box-shadow:var(--shadow);transition:border-color .15s}
+.bico{width:38px;height:38px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.c-rouge{background:#fceef1;color:var(--wine)}
+.c-blanc{background:#fdf6e3;color:#8a6820}
+.c-rosé{background:#fde8ef;color:#993556}
+.c-bulle{background:#eaf5ee;color:#2a7a3a}
 .bottle-info{flex:1;min-width:0}
 .bottle-name{font-size:14px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bottle-meta{font-size:11px;color:var(--text2);margin-top:2px}
-.bottle-actions{display:flex;flex-direction:column;gap:4px;align-items:flex-end;flex-shrink:0}
-.qty-row{display:flex;align-items:center;gap:4px}
-.qty-btn{width:24px;height:24px;border-radius:50%;border:0.5px solid var(--border2);background:none;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text2)}
-.qty-num{font-size:13px;font-weight:500;color:var(--text);min-width:18px;text-align:center}
-.action-row{display:flex;gap:4px}
-.btn-icon{width:26px;height:26px;border-radius:var(--radius);border:0.5px solid var(--border);background:none;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text2)}
+.bottle-meta{font-size:12px;color:var(--text2);margin-top:2px}
+.bottle-actions{display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0}
+.qty-row{display:flex;align-items:center;gap:5px}
+.qty-btn{width:26px;height:26px;border-radius:50%;border:1px solid var(--border2);background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text2);cursor:pointer;transition:background .1s}
+.qty-btn:active{background:var(--bg3)}
+.qty-num{font-size:14px;font-weight:600;color:var(--text);min-width:20px;text-align:center}
+.action-row{display:flex;gap:5px}
+.btn-icon{width:28px;height:28px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text2);cursor:pointer}
 .btn-icon.del{color:var(--danger)}
 .apogee-bar{margin-top:5px}
 .apogee-label{font-size:10px;color:var(--text3);margin-bottom:3px}
 .bar-track{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
-.bar-fill{height:4px;background:var(--wine-mid);border-radius:2px}
+.bar-fill{height:4px;border-radius:2px;transition:width .3s}
+.bar-urgent{background:#e74c3c}
+.bar-soon{background:#e67e22}
+.bar-now{background:#27ae60}
+.bar-wait{background:#3498db}
+.bar-past{background:var(--text3)}
+.apogee-badge{font-size:10px;padding:1px 7px;border-radius:10px;margin-top:3px;display:inline-block}
+.badge-urgent{background:#fdecea;color:#c0392b}
+.badge-soon{background:var(--warning-bg);color:var(--warning)}
+.badge-now{background:var(--success-bg);color:var(--success)}
+.badge-wait{background:var(--info-bg);color:var(--info)}
+.badge-past{background:var(--bg3);color:var(--text3)}
 
-/* ── COURSES ── */
-.courses-item{display:flex;align-items:center;gap:10px;padding:.8rem 1rem;background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);margin-bottom:.6rem}
-.ccheck{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer}
+/* ═══════════════════════════════════════
+   ACCORDS
+═══════════════════════════════════════ */
+.repas-card{background:var(--bg2);border-radius:var(--radius-lg);padding:.9rem;margin-bottom:.7rem;border:1px solid var(--border)}
+.repas-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.repas-vins{font-size:12px;color:var(--text2);margin-bottom:5px}
+.tag{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;margin:2px 3px 0 0;font-weight:500}
+.tag-r{background:#fceef1;color:var(--wine)}
+.tag-b{background:#fdf6e3;color:#8a6820}
+.tag-v{background:#eaf5ee;color:#2a7a3a}
+.tag-p{background:#fde8ef;color:#993556}
+
+/* ═══════════════════════════════════════
+   COURSES
+═══════════════════════════════════════ */
+.courses-tabs{display:flex;gap:0;background:var(--bg3);border-radius:var(--radius);padding:3px;margin-bottom:1rem}
+.ctab{flex:1;padding:.5rem;font-size:13px;border-radius:8px;border:none;background:none;color:var(--text2);cursor:pointer;font-family:var(--font);transition:all .15s}
+.ctab.active{background:var(--bg);color:var(--text);font-weight:500;box-shadow:var(--shadow)}
+.course-item{display:flex;align-items:center;gap:10px;padding:.85rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:.6rem;box-shadow:var(--shadow)}
+.ccheck{width:24px;height:24px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:all .15s}
 .ccheck.done{background:var(--wine);border-color:var(--wine)}
-.courses-price{font-size:13px;font-weight:500;color:var(--wine);flex-shrink:0}
+.course-info{flex:1;min-width:0}
+.course-name{font-size:14px;color:var(--text)}
+.course-detail{font-size:12px;color:var(--text2);margin-top:1px}
+.course-price{font-size:13px;font-weight:600;color:var(--wine);flex-shrink:0}
 
-/* ── ACCORDS ── */
-.repas-card{background:var(--bg2);border-radius:var(--radius-lg);padding:.9rem;margin-bottom:.7rem}
-.repas-title{font-size:14px;font-weight:500;margin-bottom:3px}
-.repas-vins{font-size:12px;color:var(--text2)}
-.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;margin:3px 3px 0 0}
-.tag-r{background:var(--wine-light);color:var(--wine)}
-.tag-b{background:#F5F0E8;color:#7A6020}
-.tag-v{background:#EAF3DE;color:#3B6D11}
-.tag-p{background:#FDE8EF;color:#993556}
-
-/* ── DASHBOARD ── */
+/* ═══════════════════════════════════════
+   DASHBOARD
+═══════════════════════════════════════ */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}
-.stat-dash{background:var(--bg2);border-radius:var(--radius);padding:.8rem;text-align:center}
-.stat-dash-n{font-size:22px;font-weight:500}
+.stat-dash{background:var(--bg2);border-radius:var(--radius);padding:.85rem;text-align:center;border:1px solid var(--border)}
+.stat-dash-n{font-size:22px;font-weight:600;color:var(--text)}
 .stat-dash-l{font-size:11px;color:var(--text2);margin-top:2px}
 .chart-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem}
-.chart-box{background:var(--bg2);border-radius:var(--radius-lg);padding:.85rem}
-.chart-title{font-size:12px;color:var(--text2);margin-bottom:.65rem}
-.bar-item{display:flex;align-items:center;gap:6px;margin-bottom:5px}
-.bar-label{font-size:10px;color:var(--text2);width:44px;text-align:right;flex-shrink:0}
-.bar-val{font-size:10px;color:var(--text3);width:18px;text-align:right;flex-shrink:0}
+.chart-box{background:var(--bg2);border-radius:var(--radius-lg);padding:.9rem;border:1px solid var(--border)}
+.chart-title{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:.7rem;text-transform:uppercase;letter-spacing:.5px}
+.bar-item-h{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.bar-label-h{font-size:10px;color:var(--text2);width:44px;text-align:right;flex-shrink:0}
+.bar-val-h{font-size:10px;color:var(--text3);width:18px;text-align:right;flex-shrink:0}
 .donut-wrap{display:flex;align-items:center;gap:8px}
 .donut-legend{display:flex;flex-direction:column;gap:5px;flex:1}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)}
 .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.apogee-item{display:flex;align-items:center;gap:10px;padding:.6rem 0;border-bottom:0.5px solid var(--border)}
-.apogee-item:last-child{border:none}
-.apogee-name{font-size:13px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.apogee-badge{font-size:10px;padding:2px 8px;border-radius:10px;flex-shrink:0}
-.badge-now{background:var(--success-bg);color:var(--success)}
-.badge-soon{background:var(--warning-bg);color:var(--warning)}
-.badge-wait{background:var(--bg3);color:var(--text3)}
-.badge-past{background:var(--danger-bg);color:var(--danger)}
+.priority-item{display:flex;align-items:center;gap:10px;padding:.6rem 0;border-bottom:.5px solid var(--border)}
+.priority-item:last-child{border:none}
+.priority-name{font-size:13px;color:var(--text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* ── MODAL ── */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:flex-end;justify-content:center}
-.overlay.open{display:flex}
-.sheet{background:var(--bg);border-radius:var(--radius-lg) var(--radius-lg) 0 0;padding:1.5rem 1.25rem;width:100%;max-width:430px;max-height:90dvh;overflow-y:auto}
-.sheet h2{font-size:16px;font-weight:500;margin-bottom:1.25rem;color:var(--text);display:flex;align-items:center;gap:8px}
-.fg{margin-bottom:.9rem}
-.fg label{font-size:12px;color:var(--text2);margin-bottom:4px;display:block}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:4px}
-.copt{padding:7px 4px;border-radius:var(--radius);border:0.5px solid var(--border);text-align:center;font-size:11px;cursor:pointer;color:var(--text2)}
-.copt.sel{border-color:var(--wine-mid);background:var(--wine-light);color:var(--wine)}
-.confirm-inner{background:var(--bg);border-radius:var(--radius-lg);padding:1.5rem;margin:auto 1rem;text-align:center;max-width:340px}
-.confirm-inner p{font-size:14px;color:var(--text);margin-bottom:1.25rem;line-height:1.6}
-.confirm-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-
-/* ── SCAN ── */
-.scan-zone{border:1.5px dashed var(--border2);border-radius:var(--radius-lg);padding:2rem 1rem;text-align:center;cursor:pointer;background:var(--bg2);margin-bottom:1rem}
-.scan-zone:hover{border-color:var(--wine-mid);background:var(--wine-light)}
-.loading-box{text-align:center;padding:2.5rem 1rem}
+/* ═══════════════════════════════════════
+   SCAN
+═══════════════════════════════════════ */
+.scan-zone{border:2px dashed var(--border2);border-radius:var(--radius-lg);padding:2.5rem 1rem;text-align:center;cursor:pointer;background:var(--bg2);margin-bottom:1rem;transition:all .15s}
+.scan-zone:active{background:var(--wine-light);border-color:var(--wine-mid)}
+.scan-icon{font-size:44px;color:var(--wine);display:block;margin-bottom:.75rem}
+.loading-box{text-align:center;padding:3rem 1rem}
 .spinner{width:38px;height:38px;border:3px solid var(--border);border-top-color:var(--wine);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
 @keyframes spin{to{transform:rotate(360deg)}}
-.conf{font-size:10px;padding:1px 6px;border-radius:10px;margin-left:4px}
+.conf{font-size:10px;padding:1px 7px;border-radius:10px;margin-left:5px}
 .conf-high{background:var(--success-bg);color:var(--success)}
 .conf-med{background:var(--warning-bg);color:var(--warning)}
 .conf-low{background:var(--danger-bg);color:var(--danger)}
+.scan-result-header{display:flex;gap:10px;align-items:flex-start;margin-bottom:1rem}
+.scan-thumb{width:56px;height:56px;object-fit:cover;border-radius:var(--radius);border:1px solid var(--border);flex-shrink:0}
+.scan-ok{flex:1;background:var(--success-bg);border-radius:var(--radius);padding:.65rem .85rem;display:flex;align-items:center;gap:8px}
 
-/* ── SETTINGS ── */
+/* ═══════════════════════════════════════
+   COLOR SELECTOR
+═══════════════════════════════════════ */
+.color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:4px}
+.copt{padding:7px 4px;border-radius:var(--radius);border:1.5px solid var(--border2);text-align:center;font-size:12px;cursor:pointer;color:var(--text2);transition:all .15s}
+.copt.sel{border-color:var(--wine-mid);background:var(--wine-light);color:var(--wine);font-weight:500}
+
+/* ═══════════════════════════════════════
+   SETTINGS
+═══════════════════════════════════════ */
 .settings-section{margin-bottom:1.5rem}
-.settings-title{font-size:12px;font-weight:500;color:var(--text2);letter-spacing:.5px;margin-bottom:.75rem}
-.settings-row{display:flex;align-items:center;gap:12px;padding:.85rem 1rem;background:var(--bg2);border-radius:var(--radius-lg);margin-bottom:.5rem}
-.settings-icon{width:32px;height:32px;border-radius:var(--radius);background:var(--wine-light);color:var(--wine);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.settings-row{display:flex;align-items:center;gap:12px;padding:.85rem 1rem;background:var(--bg2);border-radius:var(--radius-lg);margin-bottom:.5rem;border:1px solid var(--border)}
+.settings-icon{width:34px;height:34px;border-radius:var(--radius);background:var(--wine-light);color:var(--wine);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:17px}
 .settings-info{flex:1}
-.settings-label{font-size:14px;color:var(--text)}
+.settings-label{font-size:14px;color:var(--text);font-weight:500}
 .settings-sub{font-size:12px;color:var(--text2);margin-top:1px}
-.settings-btn{font-size:12px;padding:5px 12px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer}
+.settings-btn{font-size:12px;padding:5px 12px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;font-family:var(--font);white-space:nowrap}
 
-/* ── COMPARATEUR ── */
-.merchant-card{border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:.8rem 1rem;margin-bottom:.6rem;display:flex;align-items:center;gap:10px}
-.merchant-card.best{border:2px solid var(--success)}
-.best-badge{font-size:10px;background:var(--success-bg);color:var(--success);padding:2px 8px;border-radius:10px;margin-left:6px}
-.price-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}
-.price-stat{background:var(--bg2);border-radius:var(--radius);padding:.75rem;text-align:center}
-.price-stat-num{font-size:22px;font-weight:500}
-.price-stat-lbl{font-size:11px;color:var(--text2);margin-top:2px}
-.btn-visit{font-size:12px;padding:4px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:none;color:var(--text2);cursor:pointer;margin-top:4px;display:flex;align-items:center;gap:4px}
-
-/* ── TOAST ── */
-.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--wine);color:white;padding:9px 22px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;z-index:800}
-.toast.show{opacity:1}
-
-/* ── PWA offline banner ── */
-.offline-bar{display:none;background:var(--warning-bg);color:var(--warning);font-size:12px;padding:6px 1rem;text-align:center;border-bottom:0.5px solid var(--warning)}
-.offline-bar.show{display:block}
+/* ═══════════════════════════════════════
+   OVERLAYS / MODALS
+═══════════════════════════════════════ */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:5000;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px)}
+.overlay.open{display:flex}
+.sheet{background:var(--bg);border-radius:var(--radius-xl) var(--radius-xl) 0 0;padding:1.5rem 1.25rem 2rem;width:100%;max-width:430px;max-height:92dvh;overflow-y:auto}
+.sheet-handle{width:36px;height:4px;background:var(--bg3);border-radius:2px;margin:0 auto 1.25rem}
+.sheet h2{font-size:17px;font-weight:600;margin-bottom:1.25rem;color:var(--text);display:flex;align-items:center;gap:8px}
+.confirm-sheet{background:var(--bg);border-radius:var(--radius-xl) var(--radius-xl) 0 0;padding:1.5rem 1.25rem 2.5rem;width:100%;max-width:430px;text-align:center}
+.confirm-sheet p{font-size:15px;color:var(--text);margin-bottom:1.25rem;line-height:1.6}
+.confirm-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 </style>
 </head>
 <body>
 
-<!-- SPLASH -->
+<!-- ═══ SPLASH ═══ -->
 <div id="splash">
   <i class="ti ti-building-arch splash-icon"></i>
   <div class="splash-title">Ma Cave</div>
-  <div class="splash-sub">Votre cave à vin personnelle</div>
-  <div class="splash-bar"><div class="splash-progress"></div></div>
+  <div class="splash-subtitle">Votre cave à vin personnelle</div>
+  <div class="splash-bar"><div class="splash-fill"></div></div>
 </div>
 
-<!-- PIN -->
-<div id="pin-screen" style="display:none">
+<!-- ═══ PIN ═══ -->
+<div id="pin-screen">
   <i class="ti ti-lock pin-logo"></i>
   <div class="pin-title" id="pin-title">Déverrouiller</div>
-  <div class="pin-sub" id="pin-sub">Entrez votre code PIN</div>
-  <div class="pin-dots" id="pin-dots">
-    <div class="pin-dot" id="d0"></div>
-    <div class="pin-dot" id="d1"></div>
-    <div class="pin-dot" id="d2"></div>
-    <div class="pin-dot" id="d3"></div>
+  <div class="pin-subtitle" id="pin-sub">Entrez votre code PIN</div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="pd0"></div>
+    <div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div>
+    <div class="pin-dot" id="pd3"></div>
   </div>
   <div class="pin-grid">
     <button class="pin-btn" onclick="pinKey('1')">1</button>
-    <button class="pin-btn" onclick="pinKey('2')">2<div class="pin-btn-sub">ABC</div></button>
-    <button class="pin-btn" onclick="pinKey('3')">3<div class="pin-btn-sub">DEF</div></button>
-    <button class="pin-btn" onclick="pinKey('4')">4<div class="pin-btn-sub">GHI</div></button>
-    <button class="pin-btn" onclick="pinKey('5')">5<div class="pin-btn-sub">JKL</div></button>
-    <button class="pin-btn" onclick="pinKey('6')">6<div class="pin-btn-sub">MNO</div></button>
-    <button class="pin-btn" onclick="pinKey('7')">7<div class="pin-btn-sub">PQRS</div></button>
-    <button class="pin-btn" onclick="pinKey('8')">8<div class="pin-btn-sub">TUV</div></button>
-    <button class="pin-btn" onclick="pinKey('9')">9<div class="pin-btn-sub">WXYZ</div></button>
-    <button class="pin-btn" onclick="pinKey('bio')" style="font-size:20px"><i class="ti ti-fingerprint"></i></button>
+    <button class="pin-btn" onclick="pinKey('2')">2<div class="pin-sub">ABC</div></button>
+    <button class="pin-btn" onclick="pinKey('3')">3<div class="pin-sub">DEF</div></button>
+    <button class="pin-btn" onclick="pinKey('4')">4<div class="pin-sub">GHI</div></button>
+    <button class="pin-btn" onclick="pinKey('5')">5<div class="pin-sub">JKL</div></button>
+    <button class="pin-btn" onclick="pinKey('6')">6<div class="pin-sub">MNO</div></button>
+    <button class="pin-btn" onclick="pinKey('7')">7<div class="pin-sub">PQRS</div></button>
+    <button class="pin-btn" onclick="pinKey('8')">8<div class="pin-sub">TUV</div></button>
+    <button class="pin-btn" onclick="pinKey('9')">9<div class="pin-sub">WXYZ</div></button>
+    <button class="pin-btn" style="font-size:20px" onclick="pinKey('del')"><i class="ti ti-backspace"></i></button>
     <button class="pin-btn" onclick="pinKey('0')">0</button>
-    <button class="pin-btn" onclick="pinKey('del')"><i class="ti ti-backspace"></i></button>
+    <button class="pin-btn" style="opacity:0" disabled></button>
   </div>
-  <div class="pin-error-msg" id="pin-error"></div>
-  <div class="pin-setup-link" id="pin-setup-link" onclick="showPinSetup()">Configurer le PIN</div>
+  <div class="pin-error-msg" id="pin-err"></div>
+  <div class="pin-link" id="pin-setup-link" onclick="openPinSetup()">Configurer le PIN</div>
 </div>
 
-<!-- APP -->
-<div id="app" style="display:none">
-  <div class="offline-bar" id="offline-bar"><i class="ti ti-wifi-off" style="margin-right:6px"></i>Mode hors-ligne — données locales</div>
+<!-- ═══ AUTH ═══ -->
+<div id="auth-screen">
+  <i class="ti ti-building-arch auth-logo"></i>
+  <div class="auth-title">Ma Cave à Vin</div>
+  <div class="auth-subtitle">Connectez-vous pour accéder<br>à votre cave depuis partout</div>
+  <div class="auth-form">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Se connecter</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Créer un compte</button>
+    </div>
+    <div class="auth-error" id="auth-error"></div>
+    <div class="auth-success" id="auth-success"></div>
+    <div id="auth-login-form">
+      <div class="auth-field"><label class="auth-label">Email</label><input type="email" id="login-email" placeholder="votre@email.com" class="auth-input"></div>
+      <div class="auth-field"><label class="auth-label">Mot de passe</label><input type="password" id="login-pwd" placeholder="••••••••" class="auth-input"></div>
+      <button class="auth-btn" onclick="doLogin()">Se connecter</button>
+      <span class="auth-link" onclick="showForgot()">Mot de passe oublié ?</span>
+    </div>
+    <div id="auth-signup-form" style="display:none">
+      <div class="auth-field"><label class="auth-label">Email</label><input type="email" id="signup-email" placeholder="votre@email.com" class="auth-input"></div>
+      <div class="auth-field"><label class="auth-label">Mot de passe (8 caractères min.)</label><input type="password" id="signup-pwd" placeholder="••••••••" class="auth-input"></div>
+      <div class="auth-field"><label class="auth-label">Confirmer le mot de passe</label><input type="password" id="signup-pwd2" placeholder="••••••••" class="auth-input"></div>
+      <button class="auth-btn" onclick="doSignup()">Créer mon compte</button>
+    </div>
+    <div id="auth-forgot-form" style="display:none">
+      <div class="auth-field"><label class="auth-label">Email</label><input type="email" id="forgot-email" placeholder="votre@email.com" class="auth-input"></div>
+      <button class="auth-btn" onclick="doForgot()">Envoyer le lien</button>
+      <span class="auth-link" onclick="switchAuthTab('login')">← Retour à la connexion</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ONBOARDING ═══ -->
+<div id="onboarding">
+  <div class="ob-header">
+    <div style="width:40px"></div>
+    <div style="font-size:13px;color:var(--text3)" id="ob-step-lbl">1 / 3</div>
+    <span class="ob-skip" onclick="finishOnboarding()">Passer</span>
+  </div>
+  <div class="ob-slides" id="ob-slides">
+    <div class="ob-slide">
+      <i class="ti ti-building-arch ob-icon"></i>
+      <div class="ob-title">Bienvenue dans Ma Cave 🍷</div>
+      <div class="ob-desc">Votre cave à vin personnelle, accessible partout depuis votre téléphone ou votre ordinateur.</div>
+    </div>
+    <div class="ob-slide">
+      <i class="ti ti-camera ob-icon"></i>
+      <div class="ob-title">Ajoutez vos bouteilles</div>
+      <div class="ob-desc">Saisissez manuellement ou photographiez une étiquette — Claude reconnaît automatiquement le vin.</div>
+    </div>
+    <div class="ob-slide">
+      <i class="ti ti-sparkles ob-icon"></i>
+      <div class="ob-title">Découvrez et achetez mieux</div>
+      <div class="ob-desc">Accords mets/vins, suggestions personnalisées et comparateur de prix pour trouver les meilleures offres.</div>
+    </div>
+  </div>
+  <div class="ob-footer">
+    <div class="ob-dots">
+      <div class="ob-dot active" id="ob-dot-0"></div>
+      <div class="ob-dot" id="ob-dot-1"></div>
+      <div class="ob-dot" id="ob-dot-2"></div>
+    </div>
+    <button class="ob-next" id="ob-next-btn" onclick="obNext()">Commencer</button>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="app">
+  <div class="offline-bar" id="offline-bar"><i class="ti ti-wifi-off" style="margin-right:5px"></i>Mode hors-ligne</div>
 
   <div class="header">
     <div class="header-top">
-      <h1><i class="ti ti-building-arch"></i>Ma Cave</h1>
+      <div class="header-title"><i class="ti ti-building-arch"></i>Ma Cave<span class="queue-badge" id="queue-badge">0 en attente</span></div>
       <div class="header-actions">
-        <button class="hdr-btn" onclick="showSection('scan',document.querySelectorAll('.nav-btn')[4])" aria-label="Scanner une étiquette"><i class="ti ti-camera"></i></button>
-        <button class="hdr-btn" onclick="showSection('settings',document.querySelectorAll('.nav-btn')[5])" aria-label="Paramètres"><i class="ti ti-settings"></i></button>
+        <button class="hdr-btn" onclick="showSection('scan',navBtns[4])" aria-label="Scanner une étiquette"><i class="ti ti-camera"></i></button>
+        <button class="hdr-btn" onclick="showSection('settings',navBtns[5])" aria-label="Paramètres"><i class="ti ti-settings"></i></button>
       </div>
     </div>
     <div class="stats-row">
@@ -276,13 +441,11 @@ button{font-family:inherit;cursor:pointer}
     </div>
   </div>
 
-  <nav>
+  <nav id="main-nav">
     <button class="nav-btn active" onclick="showSection('cave',this)"><i class="ti ti-building-arch"></i>Cave</button>
     <button class="nav-btn" onclick="showSection('accord',this)"><i class="ti ti-tools-kitchen-2"></i>Accords</button>
     <button class="nav-btn" onclick="showSection('courses',this)"><i class="ti ti-shopping-cart"></i>Courses</button>
     <button class="nav-btn" onclick="showSection('dashboard',this)"><i class="ti ti-chart-bar"></i>Stats</button>
-    <button class="nav-btn" onclick="showSection('scan',this)" style="display:none"><i class="ti ti-camera"></i>Scan</button>
-    <button class="nav-btn" onclick="showSection('settings',this)" style="display:none"><i class="ti ti-settings"></i>Réglages</button>
     <button class="nav-btn" onclick="showSection('suggest',this)"><i class="ti ti-sparkles"></i>Idées</button>
   </nav>
 
@@ -290,41 +453,45 @@ button{font-family:inherit;cursor:pointer}
 
     <!-- CAVE -->
     <div id="sec-cave" class="section active">
-      <div class="export-bar">
-        <button onclick="exportJSON()"><i class="ti ti-download"></i>Exporter</button>
-        <button onclick="document.getElementById('import-file').click()"><i class="ti ti-upload"></i>Importer</button>
+      <div style="display:flex;gap:8px;margin-bottom:.85rem">
+        <button onclick="exportJSON()" style="flex:1;padding:.55rem;font-size:12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:5px;justify-content:center"><i class="ti ti-download"></i>Exporter</button>
+        <button onclick="document.getElementById('import-file').click()" style="flex:1;padding:.55rem;font-size:12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:5px;justify-content:center"><i class="ti ti-upload"></i>Importer</button>
         <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
       </div>
-      <div class="search-bar"><input type="text" placeholder="Rechercher..." id="search-input" oninput="renderBottles()"></div>
+      <div class="search-bar"><input type="text" placeholder="Rechercher..." id="search-input" oninput="renderBottles()" aria-label="Rechercher un vin"></div>
       <div class="filter-row">
         <span class="chip active" onclick="setFilter('tous',this)">Tous</span>
         <span class="chip" onclick="setFilter('rouge',this)">Rouge</span>
         <span class="chip" onclick="setFilter('blanc',this)">Blanc</span>
         <span class="chip" onclick="setFilter('rosé',this)">Rosé</span>
         <span class="chip" onclick="setFilter('bulle',this)">Bulles</span>
+        <span class="chip" onclick="setFilter('bio',this)">🌿 Bio</span>
       </div>
       <div id="bottle-list"></div>
-      <button class="fab" onclick="openAdd()"><i class="ti ti-plus"></i></button>
+      <button class="fab" onclick="openAdd()" aria-label="Ajouter une bouteille"><i class="ti ti-plus"></i></button>
     </div>
 
     <!-- ACCORDS -->
     <div id="sec-accord" class="section">
       <button class="claude-btn" onclick="askClaude('accord')"><i class="ti ti-sparkles"></i>Quel vin pour mon repas ce soir ? ↗</button>
       <div class="section-title">Accords rapides</div>
-      <div class="repas-card"><div class="repas-title">Viandes rouges / Gibier</div><div class="repas-vins">Rouges tanniques et structurés</div><div><span class="tag tag-r">Bordeaux</span><span class="tag tag-r">Côtes du Rhône</span><span class="tag tag-r">Bourgogne</span></div></div>
-      <div class="repas-card"><div class="repas-title">Poissons / Fruits de mer</div><div class="repas-vins">Blancs secs, frais et minéraux</div><div><span class="tag tag-b">Chablis</span><span class="tag tag-b">Muscadet</span><span class="tag tag-b">Sancerre</span></div></div>
-      <div class="repas-card"><div class="repas-title">Apéritif / Fête</div><div class="repas-vins">Effervescents ou blancs légers</div><div><span class="tag tag-v">Champagne</span><span class="tag tag-v">Crémant</span><span class="tag tag-b">Alsace</span></div></div>
-      <div class="repas-card"><div class="repas-title">Fromages</div><div class="repas-vins">Rouges légers ou blancs selon le fromage</div><div><span class="tag tag-r">Pinot Noir</span><span class="tag tag-b">Gewurztraminer</span></div></div>
-      <div class="repas-card"><div class="repas-title">Desserts / Foie gras</div><div class="repas-vins">Liquoreux ou demi-secs</div><div><span class="tag tag-b">Sauternes</span><span class="tag tag-b">Vouvray</span><span class="tag tag-v">Champagne doux</span></div></div>
-      <div class="repas-card"><div class="repas-title">Charcuterie / Tapas</div><div class="repas-vins">Rosés secs ou rouges légers et fruités</div><div><span class="tag tag-p">Côtes de Provence</span><span class="tag tag-r">Beaujolais</span></div></div>
+      <div class="repas-card"><div class="repas-title">Viandes rouges / Gibier</div><div class="repas-vins">Rouges tanniques et structurés · 16-18°C · Carafe 1h</div><div><span class="tag tag-r">Bordeaux</span><span class="tag tag-r">Côtes du Rhône</span><span class="tag tag-r">Bourgogne</span></div></div>
+      <div class="repas-card"><div class="repas-title">Poissons / Fruits de mer</div><div class="repas-vins">Blancs secs, frais et minéraux · 10-12°C</div><div><span class="tag tag-b">Chablis</span><span class="tag tag-b">Muscadet</span><span class="tag tag-b">Sancerre</span></div></div>
+      <div class="repas-card"><div class="repas-title">Apéritif / Fête</div><div class="repas-vins">Effervescents ou blancs légers · 7-9°C</div><div><span class="tag tag-v">Champagne</span><span class="tag tag-v">Crémant</span><span class="tag tag-b">Alsace</span></div></div>
+      <div class="repas-card"><div class="repas-title">Fromages</div><div class="repas-vins">Rouges légers ou blancs selon le fromage</div><div><span class="tag tag-r">Pinot Noir</span><span class="tag tag-b">Gewurztraminer</span><span class="tag tag-b">Sauternes</span></div></div>
+      <div class="repas-card"><div class="repas-title">Desserts / Foie gras</div><div class="repas-vins">Liquoreux ou demi-secs · 8-10°C</div><div><span class="tag tag-b">Sauternes</span><span class="tag tag-b">Vouvray</span><span class="tag tag-v">Champagne doux</span></div></div>
+      <div class="repas-card"><div class="repas-title">Charcuterie / Tapas</div><div class="repas-vins">Rosés secs ou rouges fruités légers · 14°C</div><div><span class="tag tag-p">Côtes de Provence</span><span class="tag tag-r">Beaujolais</span></div></div>
     </div>
 
     <!-- COURSES -->
     <div id="sec-courses" class="section">
       <button class="claude-btn" onclick="askClaude('courses')"><i class="ti ti-sparkles"></i>Que commander ce mois-ci ? ↗</button>
-      <div class="section-title">À acheter</div>
+      <div class="courses-tabs">
+        <button class="ctab active" id="ct-active" onclick="switchCourseTab('active',this)">À acheter</button>
+        <button class="ctab" id="ct-archive" onclick="switchCourseTab('archive',this)">Archivé</button>
+      </div>
       <div id="courses-list"></div>
-      <button style="width:100%;padding:.7rem;background:none;border:0.5px solid var(--border);border-radius:var(--radius);font-size:14px;color:var(--text2);display:flex;align-items:center;gap:6px;justify-content:center" onclick="openCourses()"><i class="ti ti-plus"></i>Ajouter à la liste</button>
+      <button style="width:100%;padding:.7rem;background:none;border:1.5px dashed var(--border2);border-radius:var(--radius-lg);font-size:14px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;font-family:var(--font)" onclick="openCourses()"><i class="ti ti-plus"></i>Ajouter à la liste</button>
     </div>
 
     <!-- DASHBOARD -->
@@ -332,153 +499,152 @@ button{font-family:inherit;cursor:pointer}
       <div id="dashboard-body"><div class="empty-state"><i class="ti ti-chart-bar"></i><p>Ajoutez des bouteilles<br>pour voir vos statistiques</p></div></div>
     </div>
 
+    <!-- SUGGESTIONS -->
+    <div id="sec-suggest" class="section">
+      <button class="claude-btn" onclick="askClaude('suggest')"><i class="ti ti-sparkles"></i>Suggère-moi des découvertes ↗</button>
+      <button class="claude-btn" onclick="askClaude('actus')" style="background:var(--bg2);color:var(--text2)"><i class="ti ti-news"></i>Actus vins & bonnes affaires ↗</button>
+      <button class="claude-btn" onclick="askClaude('manque')" style="background:var(--bg2);color:var(--text2)"><i class="ti ti-search"></i>Que manque-t-il à ma cave ? ↗</button>
+      <div class="section-title">Mes préférences</div>
+      <div style="background:var(--bg2);border-radius:var(--radius-lg);padding:1rem;border:1px solid var(--border)">
+        <div style="font-size:13px;color:var(--text2);margin-bottom:.75rem">Ces infos personnalisent les suggestions Claude</div>
+        <div class="fg"><label>Régions favorites</label><input type="text" id="p-regions" placeholder="ex: Bourgogne, Bordeaux..."></div>
+        <div class="fg"><label>Budget moyen / bouteille</label><input type="text" id="p-budget" placeholder="ex: 15–30€"></div>
+        <div class="fg"><label>Style préféré</label><input type="text" id="p-style" placeholder="ex: fruité, peu tannique..."></div>
+        <div style="display:flex;gap:8px;margin-bottom:.75rem">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);cursor:pointer"><input type="checkbox" id="p-bio" style="width:auto"> 🌿 Préférer le bio</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);cursor:pointer"><input type="checkbox" id="p-sulfites" style="width:auto"> Faibles sulfites</label>
+        </div>
+        <button class="btn-primary" onclick="savePrefs()" style="margin-top:.25rem">Enregistrer mes préférences</button>
+      </div>
+    </div>
+
     <!-- SCAN -->
     <div id="sec-scan" class="section">
-      <div id="scan-step-main">
-        <div style="background:var(--gold-bg);border-radius:var(--radius);padding:.75rem 1rem;margin-bottom:1rem;display:flex;gap:10px">
+      <div id="scan-main">
+        <div style="background:var(--gold-bg);border-radius:var(--radius);padding:.75rem 1rem;margin-bottom:1rem;display:flex;gap:10px;border:1px solid rgba(196,147,42,.2)">
           <i class="ti ti-bulb" style="color:var(--gold);flex-shrink:0;margin-top:1px"></i>
           <p style="font-size:12px;color:var(--text2);line-height:1.5">Photographiez l'étiquette en pleine lumière. Claude détecte automatiquement nom, millésime, région et cépage.</p>
         </div>
         <div class="scan-zone" onclick="document.getElementById('file-photo').click()">
-          <i class="ti ti-camera" style="font-size:40px;color:var(--wine);display:block;margin-bottom:.75rem"></i>
+          <i class="ti ti-camera scan-icon"></i>
           <div style="font-size:15px;font-weight:500;margin-bottom:.25rem">Photographier l'étiquette</div>
           <div style="font-size:12px;color:var(--text2)">Appuyez pour ouvrir l'appareil photo</div>
         </div>
         <input type="file" id="file-photo" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event)">
-        <div style="display:flex;align-items:center;gap:10px;margin:1rem 0"><div style="flex:1;height:0.5px;background:var(--border)"></div><div style="font-size:12px;color:var(--text3)">ou</div><div style="flex:1;height:0.5px;background:var(--border)"></div></div>
+        <div style="display:flex;align-items:center;gap:10px;margin:1rem 0"><div style="flex:1;height:.5px;background:var(--border)"></div><div style="font-size:12px;color:var(--text3)">ou</div><div style="flex:1;height:.5px;background:var(--border)"></div></div>
         <button class="btn-secondary" style="margin:0" onclick="openAdd()"><i class="ti ti-edit" style="margin-right:6px"></i>Saisir manuellement</button>
       </div>
-      <div id="scan-step-loading" style="display:none">
-        <div id="scan-preview"></div>
+      <div id="scan-loading" style="display:none">
+        <div id="scan-preview" style="margin-bottom:1rem"></div>
         <div class="loading-box">
           <div class="spinner"></div>
           <div style="font-size:14px;color:var(--text2)">Claude analyse l'étiquette...</div>
           <div style="font-size:12px;color:var(--text3);margin-top:6px" id="scan-sub">Identification en cours</div>
         </div>
       </div>
-      <div id="scan-step-result" style="display:none">
-        <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:1rem">
-          <img id="scan-thumb" src="" alt="Étiquette" style="width:56px;height:56px;object-fit:cover;border-radius:var(--radius);border:0.5px solid var(--border);flex-shrink:0">
-          <div style="flex:1;background:var(--success-bg);border-radius:var(--radius);padding:.65rem .85rem;display:flex;align-items:center;gap:8px">
-            <i class="ti ti-check" style="color:var(--success)"></i>
-            <span style="font-size:13px;color:var(--success);font-weight:500">Étiquette reconnue</span>
-          </div>
+      <div id="scan-result" style="display:none">
+        <div class="scan-result-header">
+          <img id="scan-thumb" src="" alt="Étiquette" class="scan-thumb">
+          <div class="scan-ok"><i class="ti ti-check" style="color:var(--success)"></i><span style="font-size:13px;color:var(--success);font-weight:500">Étiquette reconnue</span></div>
         </div>
-        <div class="fg"><label>Nom du vin * <span class="conf conf-high" id="sc-conf-nom" style="display:none">sûr</span></label><input type="text" id="sc-nom" placeholder="Nom du vin"></div>
-        <div class="fg"><label>Domaine / Producteur</label><input type="text" id="sc-domaine"></div>
-        <div class="frow"><div class="fg"><label>Millésime <span class="conf conf-high" id="sc-conf-mil" style="display:none">sûr</span></label><input type="number" id="sc-mil" placeholder="2019"></div><div class="fg"><label>Quantité</label><input type="number" id="sc-qty" value="1" min="1"></div></div>
-        <div class="fg"><label>Région <span class="conf conf-med" id="sc-conf-reg" style="display:none">probable</span></label><input type="text" id="sc-region"></div>
-        <div class="fg"><label>Cépage</label><input type="text" id="sc-cepage"></div>
-        <div class="fg"><label>Couleur</label><div class="color-grid"><div class="copt sel" id="sco-rouge" onclick="selScanColor(this,'rouge')">Rouge</div><div class="copt" id="sco-blanc" onclick="selScanColor(this,'blanc')">Blanc</div><div class="copt" id="sco-rosé" onclick="selScanColor(this,'rosé')">Rosé</div><div class="copt" id="sco-bulle" onclick="selScanColor(this,'bulle')">Bulles</div></div></div>
-        <div class="frow"><div class="fg"><label>Prix achat (€)</label><input type="number" id="sc-prix" placeholder="25"></div><div class="fg"><label>Note /20</label><input type="number" id="sc-note" placeholder="16"></div></div>
+        <div class="fg"><label>Nom du vin * <span class="conf conf-high" id="sc-cn" style="display:none">sûr</span></label><input type="text" id="sc-nom"></div>
+        <div class="fg"><label>Domaine</label><input type="text" id="sc-dom"></div>
+        <div class="frow"><div class="fg"><label>Millésime <span class="conf" id="sc-cm" style="display:none">sûr</span></label><input type="number" id="sc-mil" placeholder="2019"></div><div class="fg"><label>Quantité</label><input type="number" id="sc-qty" value="1" min="1"></div></div>
+        <div class="fg"><label>Région <span class="conf" id="sc-cr" style="display:none">probable</span></label><input type="text" id="sc-reg"></div>
+        <div class="fg"><label>Cépage</label><input type="text" id="sc-cep"></div>
+        <div class="fg"><label>Couleur</label><div class="color-grid"><div class="copt sel" id="sco-rouge" onclick="selScanCol(this,'rouge')">Rouge</div><div class="copt" id="sco-blanc" onclick="selScanCol(this,'blanc')">Blanc</div><div class="copt" id="sco-rosé" onclick="selScanCol(this,'rosé')">Rosé</div><div class="copt" id="sco-bulle" onclick="selScanCol(this,'bulle')">Bulles</div></div></div>
+        <div class="frow"><div class="fg"><label>Prix achat (€)</label><input type="number" id="sc-prix"></div><div class="fg"><label>Note /20</label><input type="number" id="sc-note" min="0" max="20"></div></div>
         <div class="frow"><div class="fg"><label>Apogée début</label><input type="number" id="sc-ad"></div><div class="fg"><label>Apogée fin</label><input type="number" id="sc-af"></div></div>
         <button class="btn-primary" onclick="saveScan()">Ajouter à ma cave</button>
-        <button class="btn-secondary" onclick="resetScan()">Scanner une autre étiquette</button>
-      </div>
-    </div>
-
-    <!-- IDÉES -->
-    <div id="sec-suggest" class="section">
-      <button class="claude-btn" onclick="askClaude('suggest')"><i class="ti ti-sparkles"></i>Suggère-moi des découvertes ↗</button>
-      <button class="claude-btn" onclick="askClaude('actus')" style="background:var(--bg2);color:var(--text2)"><i class="ti ti-news"></i>Actus vins & bonnes affaires ↗</button>
-      <button class="claude-btn" onclick="askClaude('manque')" style="background:var(--bg2);color:var(--text2)"><i class="ti ti-search"></i>Que manque-t-il à ma cave ? ↗</button>
-      <button class="claude-btn" onclick="showSection('comparateur',document.querySelectorAll('.nav-btn')[0])" style="background:var(--bg2);color:var(--text2)"><i class="ti ti-chart-bar"></i>Comparer les prix ↗</button>
-      <div class="section-title">Mes préférences</div>
-      <div style="background:var(--bg2);border-radius:var(--radius-lg);padding:1rem">
-        <div style="font-size:13px;color:var(--text2);margin-bottom:.75rem">Ces infos personnalisent les suggestions Claude</div>
-        <div class="fg"><label>Régions favorites</label><input type="text" id="p-regions" placeholder="ex: Bourgogne, Bordeaux..."></div>
-        <div class="fg"><label>Budget moyen / bouteille</label><input type="text" id="p-budget" placeholder="ex: 15–30€"></div>
-        <div class="fg"><label>Style préféré</label><input type="text" id="p-style" placeholder="ex: fruité, peu tannique..."></div>
-        <button class="btn-primary" onclick="savePrefs()" style="margin-top:.25rem">Enregistrer</button>
+        <button class="btn-secondary" onclick="resetScan()">Scanner une autre</button>
       </div>
     </div>
 
     <!-- SETTINGS -->
     <div id="sec-settings" class="section">
       <div class="settings-section">
-        <div class="settings-title">Sécurité</div>
+        <div class="section-title">Sécurité</div>
         <div class="settings-row">
           <div class="settings-icon"><i class="ti ti-lock"></i></div>
-          <div class="settings-info">
-            <div class="settings-label">Code PIN</div>
-            <div class="settings-sub" id="pin-status-lbl">Non configuré</div>
-          </div>
-          <button class="settings-btn" onclick="showPinSetup()" id="pin-action-btn">Configurer</button>
+          <div class="settings-info"><div class="settings-label">Code PIN</div><div class="settings-sub" id="pin-status-lbl">Non configuré</div></div>
+          <button class="settings-btn" onclick="openPinSetup()" id="pin-action-btn">Configurer</button>
         </div>
       </div>
       <div class="settings-section">
-        <div class="settings-title">Données</div>
+        <div class="section-title">Données</div>
         <div class="settings-row">
           <div class="settings-icon"><i class="ti ti-download"></i></div>
-          <div class="settings-info">
-            <div class="settings-label">Exporter la cave</div>
-            <div class="settings-sub">Sauvegarde JSON complète</div>
-          </div>
+          <div class="settings-info"><div class="settings-label">Exporter ma cave</div><div class="settings-sub">Sauvegarde JSON complète</div></div>
           <button class="settings-btn" onclick="exportJSON()">Exporter</button>
         </div>
         <div class="settings-row">
           <div class="settings-icon"><i class="ti ti-upload"></i></div>
-          <div class="settings-info">
-            <div class="settings-label">Importer une sauvegarde</div>
-            <div class="settings-sub">Restaurer depuis un fichier</div>
-          </div>
+          <div class="settings-info"><div class="settings-label">Importer une sauvegarde</div><div class="settings-sub">Restaurer depuis un fichier</div></div>
           <button class="settings-btn" onclick="document.getElementById('import-file').click()">Importer</button>
         </div>
         <div class="settings-row">
-          <div class="settings-icon" style="background:var(--danger-bg);color:var(--danger)"><i class="ti ti-trash"></i></div>
-          <div class="settings-info">
-            <div class="settings-label">Effacer toutes les données</div>
-            <div class="settings-sub">Action irréversible</div>
-          </div>
-          <button class="settings-btn" style="color:var(--danger);border-color:var(--danger)" onclick="clearAll()">Effacer</button>
+          <div class="settings-icon"><i class="ti ti-refresh"></i></div>
+          <div class="settings-info"><div class="settings-label">Revoir le tutoriel</div><div class="settings-sub">Afficher l'onboarding</div></div>
+          <button class="settings-btn" onclick="showOnboarding()">Revoir</button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-icon" style="background:var(--danger-bg);color:var(--danger)"><i class="ti ti-logout"></i></div>
+          <div class="settings-info"><div class="settings-label">Se déconnecter</div><div class="settings-sub" id="user-email-lbl"></div></div>
+          <button class="settings-btn" style="color:var(--danger);border-color:var(--danger)" onclick="doLogout()">Déco.</button>
         </div>
       </div>
       <div class="settings-section">
-        <div class="settings-title">À propos</div>
+        <div class="section-title">À propos</div>
         <div class="settings-row">
           <div class="settings-icon"><i class="ti ti-info-circle"></i></div>
-          <div class="settings-info">
-            <div class="settings-label">Ma Cave à Vin</div>
-            <div class="settings-sub">Version 1.1 · Propulsé par Claude</div>
-          </div>
+          <div class="settings-info"><div class="settings-label">Ma Cave à Vin</div><div class="settings-sub">Version 2.0 · Architecture B · Propulsé par Claude</div></div>
         </div>
       </div>
     </div>
 
-  </div>
-</div>
+  </div><!-- /content -->
+</div><!-- /app -->
 
-<!-- OVERLAYS -->
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══ OVERLAYS ═══ -->
+<!-- Add/Edit bottle -->
 <div class="overlay" id="ov-add">
   <div class="sheet">
+    <div class="sheet-handle"></div>
     <h2 id="modal-title"><i class="ti ti-plus"></i>Ajouter une bouteille</h2>
     <input type="hidden" id="edit-id">
     <div class="fg"><label>Nom du vin *</label><input type="text" id="f-nom" placeholder="ex: Château Margaux"></div>
-    <div class="fg"><label>Domaine / Producteur</label><input type="text" id="f-domaine"></div>
-    <div class="frow"><div class="fg"><label>Millésime</label><input type="number" id="f-mil" placeholder="2019"></div><div class="fg"><label>Quantité</label><input type="number" id="f-qty" value="1" min="1"></div></div>
-    <div class="fg"><label>Région / Appellation</label><input type="text" id="f-reg" placeholder="ex: Pauillac"></div>
-    <div class="fg"><label>Couleur</label><div class="color-grid"><div class="copt sel" onclick="selColor(this,'rouge')">Rouge</div><div class="copt" onclick="selColor(this,'blanc')">Blanc</div><div class="copt" onclick="selColor(this,'rosé')">Rosé</div><div class="copt" onclick="selColor(this,'bulle')">Bulles</div></div></div>
-    <div class="frow"><div class="fg"><label>Prix achat (€)</label><input type="number" id="f-prix" placeholder="25"></div><div class="fg"><label>Note /20</label><input type="number" id="f-note" placeholder="16"></div></div>
+    <div class="fg"><label>Domaine / Producteur</label><input type="text" id="f-dom"></div>
+    <div class="frow"><div class="fg"><label>Millésime</label><input type="number" id="f-mil" placeholder="2019"></div><div class="fg"><label>Quantité *</label><input type="number" id="f-qty" value="1" min="1"></div></div>
+    <div class="fg"><label>Région / Appellation</label><input type="text" id="f-reg" placeholder="ex: Pauillac, Bordeaux"></div>
+    <div class="fg"><label>Couleur</label><div class="color-grid"><div class="copt sel" onclick="selCol(this,'rouge')">Rouge</div><div class="copt" onclick="selCol(this,'blanc')">Blanc</div><div class="copt" onclick="selCol(this,'rosé')">Rosé</div><div class="copt" onclick="selCol(this,'bulle')">Bulles</div></div></div>
+    <div class="frow"><div class="fg"><label>Prix achat (€)</label><input type="number" id="f-prix" placeholder="25"></div><div class="fg"><label>Note /20</label><input type="number" id="f-note" placeholder="16" min="0" max="20"></div></div>
     <div class="frow"><div class="fg"><label>Apogée début</label><input type="number" id="f-ad" placeholder="2024"></div><div class="fg"><label>Apogée fin</label><input type="number" id="f-af" placeholder="2030"></div></div>
-    <div class="fg"><label>Notes</label><input type="text" id="f-notes" placeholder="ex: cadeau, occasion..."></div>
+    <div class="fg"><label>Commentaire de dégustation</label><textarea id="f-comment" placeholder="Arômes, texture, impression..." rows="2" style="resize:none"></textarea></div>
     <button class="btn-primary" onclick="saveBottle()">Enregistrer</button>
     <button class="btn-secondary" onclick="closeAdd()">Annuler</button>
   </div>
 </div>
 
+<!-- Add to courses -->
 <div class="overlay" id="ov-courses">
   <div class="sheet">
+    <div class="sheet-handle"></div>
     <h2><i class="ti ti-shopping-cart"></i>Ajouter à la liste</h2>
-    <div class="fg"><label>Vin recherché *</label><input type="text" id="c-nom" placeholder="ex: Saint-Émilion"></div>
+    <div class="fg"><label>Vin recherché *</label><input type="text" id="c-nom" placeholder="ex: Saint-Émilion Grand Cru"></div>
     <div class="frow"><div class="fg"><label>Budget max (€)</label><input type="number" id="c-prix"></div><div class="fg"><label>Quantité</label><input type="number" id="c-qty" value="1"></div></div>
-    <div class="fg"><label>Où chercher</label><input type="text" id="c-ou" placeholder="ex: Vivino, caviste..."></div>
-    <button class="btn-primary" onclick="saveCourses()">Ajouter</button>
+    <div class="fg"><label>Où acheter</label><input type="text" id="c-ou" placeholder="ex: Vivino, caviste local..."></div>
+    <button class="btn-primary" onclick="saveCourse()">Ajouter</button>
     <button class="btn-secondary" onclick="document.getElementById('ov-courses').classList.remove('open')">Annuler</button>
   </div>
 </div>
 
+<!-- Confirm delete -->
 <div class="overlay" id="ov-confirm">
-  <div class="confirm-inner">
+  <div class="confirm-sheet">
+    <div class="sheet-handle"></div>
     <p id="confirm-msg">Supprimer cette bouteille ?</p>
     <div class="confirm-btns">
       <button class="btn-secondary" style="margin:0" onclick="document.getElementById('ov-confirm').classList.remove('open')">Annuler</button>
@@ -487,380 +653,363 @@ button{font-family:inherit;cursor:pointer}
   </div>
 </div>
 
+<!-- Motif sortie -->
+<div class="overlay" id="ov-motif">
+  <div class="confirm-sheet">
+    <div class="sheet-handle"></div>
+    <p>Pourquoi cette bouteille quitte la cave ?</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <button onclick="confirmMotif('bu')" style="padding:.75rem;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg2);font-size:14px;cursor:pointer;font-family:var(--font)">🍷 Bue</button>
+      <button onclick="confirmMotif('offert')" style="padding:.75rem;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg2);font-size:14px;cursor:pointer;font-family:var(--font)">🎁 Offerte</button>
+      <button onclick="confirmMotif('casse')" style="padding:.75rem;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg2);font-size:14px;cursor:pointer;font-family:var(--font)">💔 Cassée</button>
+      <button onclick="confirmMotif('vendu')" style="padding:.75rem;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg2);font-size:14px;cursor:pointer;font-family:var(--font)">📦 Vendue</button>
+    </div>
+    <button class="btn-secondary" onclick="document.getElementById('ov-motif').classList.remove('open')">Annuler</button>
+  </div>
+</div>
+
+<!-- Course → Cave dialog -->
+<div class="overlay" id="ov-cave-from-course">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h2><i class="ti ti-bottle"></i>Ajouter à ma cave</h2>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:1rem">Complétez les informations avant d'ajouter en cave</p>
+    <input type="hidden" id="cfc-course-id">
+    <div class="fg"><label>Nom du vin</label><input type="text" id="cfc-nom"></div>
+    <div class="frow"><div class="fg"><label>Millésime</label><input type="number" id="cfc-mil" placeholder="2019"></div><div class="fg"><label>Quantité</label><input type="number" id="cfc-qty" value="1"></div></div>
+    <div class="fg"><label>Couleur</label><div class="color-grid"><div class="copt sel" onclick="selCfcCol(this,'rouge')">Rouge</div><div class="copt" onclick="selCfcCol(this,'blanc')">Blanc</div><div class="copt" onclick="selCfcCol(this,'rosé')">Rosé</div><div class="copt" onclick="selCfcCol(this,'bulle')">Bulles</div></div></div>
+    <div class="fg"><label>Région</label><input type="text" id="cfc-reg" placeholder="ex: Bordeaux"></div>
+    <div class="fg"><label>Prix payé (€)</label><input type="number" id="cfc-prix"></div>
+    <button class="btn-primary" onclick="confirmCaveFromCourse()">Ajouter à ma cave</button>
+    <button class="btn-secondary" onclick="document.getElementById('ov-cave-from-course').classList.remove('open')">Annuler</button>
+  </div>
+</div>
+
+<!-- PIN setup -->
 <div class="overlay" id="ov-pin-setup">
   <div class="sheet">
+    <div class="sheet-handle"></div>
     <h2><i class="ti ti-lock"></i><span id="pin-setup-title">Créer un code PIN</span></h2>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:1.25rem" id="pin-setup-sub">Choisissez un code PIN à 4 chiffres pour protéger votre cave.</p>
     <div class="fg"><label id="pin-input-label">Nouveau PIN (4 chiffres)</label><input type="password" id="pin-new" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••"></div>
-    <div class="fg" id="pin-confirm-wrap"><label>Confirmer le PIN</label><input type="password" id="pin-confirm" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••"></div>
-    <div style="font-size:12px;color:var(--danger);min-height:18px;margin-bottom:.75rem" id="pin-setup-error"></div>
-    <button class="btn-primary" onclick="savePinSetup()">Enregistrer le PIN</button>
-    <button class="btn-secondary" id="pin-remove-btn" onclick="removePin()" style="display:none">Supprimer le PIN</button>
+    <div class="fg"><label>Confirmer le PIN</label><input type="password" id="pin-confirm" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••"></div>
+    <div style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:.75rem" id="pin-setup-error"></div>
+    <button class="btn-primary" onclick="savePinSetup()">Enregistrer</button>
+    <button class="btn-danger" id="pin-remove-btn" onclick="removePinSetup()" style="display:none">Supprimer le PIN</button>
     <button class="btn-secondary" onclick="document.getElementById('ov-pin-setup').classList.remove('open')">Annuler</button>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- ═══ SUPABASE + APP SCRIPT ═══ -->
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-<!-- PWA Service Worker registration -->
-<script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
-  });
-}
-window.addEventListener('online',()=>document.getElementById('offline-bar').classList.remove('show'));
-window.addEventListener('offline',()=>document.getElementById('offline-bar').classList.add('show'));
-if(!navigator.onLine)document.getElementById('offline-bar').classList.add('show');
-</script>
+// ── CONFIG ──
+const SUPA_URL = 'https://oqmfdhngzfdpcrlrwtob.supabase.co'
+const SUPA_KEY = 'sb_publishable_HBqxiga3cvRaagqEVLaj0g_oI0mYfcSjJN6'
+const supabase = createClient(SUPA_URL, SUPA_KEY)
 
-<script>
 // ── STATE ──
-let bottles=JSON.parse(localStorage.getItem('cave_v2')||'[]');
-let courses=JSON.parse(localStorage.getItem('cave_courses')||'[]');
-let colorFilter='tous';
-let selCol='rouge';
-let selScanCol='rouge';
-let pendingDel=null;
-let pinBuffer='';
-let pinMode='unlock'; // unlock | setup-new | setup-confirm
-let pinTemp='';
-let scanImgData=null;
+let currentUser = null
+let bottles = []
+let courses = []
+let prefs = {}
+let colorFilter = 'tous'
+let selColAdd = 'rouge'
+let selColScan = 'rouge'
+let selColCfc = 'rouge'
+let pendingDel = null
+let pendingQtyId = null
+let pinBuffer = ''
+let pinAttempts = 0
+let pinBlockedUntil = null
+let scanImgData = null
+let courseTab = 'active'
+let obStep = 0
+window.navBtns = document.querySelectorAll('.nav-btn')
 
-const icons={rouge:'ti-droplet',blanc:'ti-sun',rosé:'ti-heart',bulle:'ti-glass-champagne'};
-const colorClass={rouge:'c-rouge',blanc:'c-blanc',rosé:'c-rosé',bulle:'c-bulle'};
+const icons = { rouge:'ti-droplet', blanc:'ti-sun', rosé:'ti-heart', bulle:'ti-glass-champagne' }
+const colorClass = { rouge:'c-rouge', blanc:'c-blanc', rosé:'c-rosé', bulle:'c-bulle' }
 
-// ── TOAST ──
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
-
-// ── SAVE ──
-function save(){
-  localStorage.setItem('cave_v2',JSON.stringify(bottles));
-  localStorage.setItem('cave_courses',JSON.stringify(courses));
-  updateStats();renderBottles();renderCourses();
+// ── UTILS ──
+window.toast = function(msg, type='') {
+  const t = document.getElementById('toast')
+  t.textContent = msg
+  t.className = 'toast show' + (type ? ' '+type : '')
+  clearTimeout(t._tid)
+  t._tid = setTimeout(() => t.classList.remove('show'), 2400)
 }
 
-// ── STATS ──
-function updateStats(){
-  const total=bottles.reduce((s,b)=>s+(parseInt(b.qty)||1),0);
-  const val=bottles.reduce((s,b)=>s+((parseInt(b.qty)||1)*(parseFloat(b.prix)||0)),0);
-  document.getElementById('s-btl').textContent=total;
-  document.getElementById('s-ref').textContent=bottles.length;
-  document.getElementById('s-val').textContent=Math.round(val)+'€';
+function hashPin(pin) {
+  let h = 0
+  for (let c of pin) { h = ((h<<5)-h)+c.charCodeAt(0); h|=0 }
+  return h.toString(36)
 }
 
-// ── NAV ──
-function showSection(n,btn){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('sec-'+n).classList.add('active');
-  if(btn)btn.classList.add('active');
-  if(n==='dashboard')buildDashboard();
+function getApogeeStatus(debut, fin) {
+  const now = new Date().getFullYear()
+  if (!debut || !fin) return 'unknown'
+  if (now < parseInt(debut)) return 'wait'
+  if (now > parseInt(fin)) return 'past'
+  if (parseInt(fin) - now <= 1) return 'urgent'
+  if (parseInt(fin) - now <= 2) return 'soon'
+  return 'now'
 }
 
-// ── BOTTLES ──
-function renderBottles(){
-  const q=(document.getElementById('search-input').value||'').toLowerCase();
-  const list=bottles.filter(b=>(colorFilter==='tous'||b.couleur===colorFilter)&&(!q||b.nom.toLowerCase().includes(q)||(b.region||'').toLowerCase().includes(q)));
-  const el=document.getElementById('bottle-list');
-  if(!list.length){el.innerHTML='<div class="empty-state"><i class="ti ti-building-arch"></i><p>Aucune bouteille.<br>Appuyez sur + pour commencer !</p></div>';return;}
-  const now=new Date().getFullYear();
-  el.innerHTML=list.map(b=>{
-    const i=bottles.findIndex(x=>x.id===b.id);
-    let apogee='';
-    if(b.ad&&b.af){const s=parseInt(b.ad),e=parseInt(b.af);const pct=Math.min(100,Math.max(0,Math.round(((now-s)/(e-s))*100)));const lbl=now<s?'Pas encore à maturité':now>e?'Passé apogée':'En apogée';apogee=`<div class="apogee-bar"><div class="apogee-label">${lbl} · ${b.ad}–${b.af}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div></div>`;}
-    return`<div class="bottle-card">
-      <div class="bico ${colorClass[b.couleur]||'c-rouge'}"><i class="ti ${icons[b.couleur]||'ti-droplet'}"></i></div>
-      <div class="bottle-info">
-        <div class="bottle-name">${b.nom}</div>
-        <div class="bottle-meta">${b.region||''}${b.mil?' · '+b.mil:''}${b.note?' · '+b.note+'/20':''}</div>
-        ${apogee}
-      </div>
-      <div class="bottle-actions">
-        <div class="qty-row">
-          <button class="qty-btn" onclick="changeQty(${i},-1)">−</button>
-          <span class="qty-num">${b.qty||1}</span>
-          <button class="qty-btn" onclick="changeQty(${i},1)">+</button>
-        </div>
-        <div class="action-row">
-          <button class="btn-icon" onclick="openEdit(${i})"><i class="ti ti-edit"></i></button>
-          <button class="btn-icon del" onclick="askDelete(${i})"><i class="ti ti-trash"></i></button>
-        </div>
-        ${b.prix?`<div style="font-size:11px;color:var(--text3)">${b.prix}€</div>`:''}
-      </div>
-    </div>`;
-  }).join('');
+function statusInfo(s) {
+  return {
+    urgent: { label:'⚠️ À boire maintenant', cls:'badge-urgent', bar:'bar-urgent' },
+    soon:   { label:'🟠 À boire bientôt',    cls:'badge-soon',   bar:'bar-soon' },
+    now:    { label:'🟢 En apogée',          cls:'badge-now',    bar:'bar-now' },
+    wait:   { label:'🔵 À garder',           cls:'badge-wait',   bar:'bar-wait' },
+    past:   { label:'⚫ Passé apogée',       cls:'badge-past',   bar:'bar-past' },
+    unknown:{ label:'',                      cls:'',             bar:'bar-wait' }
+  }[s] || { label:'', cls:'', bar:'' }
 }
 
-function setFilter(c,el){colorFilter=c;document.querySelectorAll('.filter-row .chip').forEach(x=>x.classList.remove('active'));el.classList.add('active');renderBottles();}
-function selColor(el,c){selCol=c;document.querySelectorAll('#ov-add .copt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
-function changeQty(i,d){const n=Math.max(0,(parseInt(bottles[i].qty)||1)+d);if(n===0){askDelete(i);return;}bottles[i].qty=n;save();toast(d>0?'Quantité augmentée':'Quantité diminuée');}
-
-function openAdd(){
-  document.getElementById('edit-id').value='';
-  document.getElementById('modal-title').innerHTML='<i class="ti ti-plus"></i>Ajouter une bouteille';
-  ['f-nom','f-domaine','f-mil','f-qty','f-reg','f-prix','f-note','f-ad','f-af','f-notes'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('f-qty').value=1;
-  selCol='rouge';document.querySelectorAll('#ov-add .copt').forEach((o,i)=>o.classList.toggle('sel',i===0));
-  document.getElementById('ov-add').classList.add('open');
+// ── AUTH ──
+window.switchAuthTab = function(tab) {
+  document.getElementById('auth-login-form').style.display = tab==='login'?'':'none'
+  document.getElementById('auth-signup-form').style.display = tab==='signup'?'':'none'
+  document.getElementById('auth-forgot-form').style.display = 'none'
+  document.getElementById('tab-login').classList.toggle('active', tab==='login')
+  document.getElementById('tab-signup').classList.toggle('active', tab==='signup')
+  clearAuthMsg()
 }
 
-function openEdit(i){
-  const b=bottles[i];
-  document.getElementById('edit-id').value=b.id;
-  document.getElementById('modal-title').innerHTML='<i class="ti ti-edit"></i>Modifier la bouteille';
-  document.getElementById('f-nom').value=b.nom||'';
-  document.getElementById('f-domaine').value=b.domaine||'';
-  document.getElementById('f-mil').value=b.mil||'';
-  document.getElementById('f-qty').value=b.qty||1;
-  document.getElementById('f-reg').value=b.region||'';
-  document.getElementById('f-prix').value=b.prix||'';
-  document.getElementById('f-note').value=b.note||'';
-  document.getElementById('f-ad').value=b.ad||'';
-  document.getElementById('f-af').value=b.af||'';
-  document.getElementById('f-notes').value=b.notes||'';
-  selCol=b.couleur||'rouge';
-  document.querySelectorAll('#ov-add .copt').forEach(o=>o.classList.toggle('sel',o.textContent.toLowerCase().trim()===selCol||(selCol==='bulle'&&o.textContent.trim()==='Bulles')||(selCol==='rosé'&&o.textContent.trim()==='Rosé')));
-  document.getElementById('ov-add').classList.add('open');
+window.showForgot = function() {
+  document.getElementById('auth-login-form').style.display = 'none'
+  document.getElementById('auth-signup-form').style.display = 'none'
+  document.getElementById('auth-forgot-form').style.display = ''
+  clearAuthMsg()
 }
 
-function closeAdd(){document.getElementById('ov-add').classList.remove('open');}
-
-function saveBottle(){
-  const nom=document.getElementById('f-nom').value.trim();
-  if(!nom){toast('Le nom est requis');return;}
-  const id=document.getElementById('edit-id').value;
-  const data={id:id||crypto.randomUUID(),nom,domaine:document.getElementById('f-domaine').value.trim(),mil:document.getElementById('f-mil').value,qty:parseInt(document.getElementById('f-qty').value)||1,region:document.getElementById('f-reg').value.trim(),couleur:selCol,prix:document.getElementById('f-prix').value,note:document.getElementById('f-note').value,ad:document.getElementById('f-ad').value,af:document.getElementById('f-af').value,notes:document.getElementById('f-notes').value.trim()};
-  if(id){const i=bottles.findIndex(b=>b.id===id);if(i>-1)bottles[i]=data;toast('Bouteille modifiée !');}
-  else{bottles.push(data);toast('Bouteille ajoutée !');}
-  closeAdd();save();
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error')
+  el.textContent = msg; el.classList.add('show')
+  document.getElementById('auth-success').classList.remove('show')
 }
 
-function askDelete(i){pendingDel=i;document.getElementById('confirm-msg').textContent=`Supprimer "${bottles[i].nom}" ? Cette action est irréversible.`;document.getElementById('ov-confirm').classList.add('open');}
-function confirmDelete(){if(pendingDel===null)return;bottles.splice(pendingDel,1);pendingDel=null;document.getElementById('ov-confirm').classList.remove('open');save();toast('Bouteille supprimée');}
-
-// ── COURSES ──
-function renderCourses(){
-  const el=document.getElementById('courses-list');
-  if(!courses.length){el.innerHTML='<div class="empty-state"><i class="ti ti-shopping-cart"></i><p>Liste vide.<br>Ajoutez vos souhaits !</p></div>';return;}
-  el.innerHTML=courses.map((c,i)=>`
-    <div class="courses-item">
-      <div class="ccheck ${c.done?'done':''}" onclick="toggleCourse(${i})">${c.done?'<i class="ti ti-check" style="font-size:12px;color:white"></i>':''}</div>
-      <div style="flex:1">
-        <div style="font-size:14px;color:var(--text);${c.done?'text-decoration:line-through;color:var(--text3)':''}">${c.nom}</div>
-        <div style="font-size:12px;color:var(--text2)">${c.qty||1} btl · ${c.ou||'à trouver'}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <div class="courses-price">${c.prix?'max '+c.prix+'€':''}</div>
-        <button class="btn-icon del" onclick="deleteCourse(${i})"><i class="ti ti-trash"></i></button>
-      </div>
-    </div>`).join('');
-}
-function openCourses(){document.getElementById('ov-courses').classList.add('open');}
-function saveCourses(){const nom=document.getElementById('c-nom').value.trim();if(!nom){toast('Le nom est requis');return;}courses.push({nom,prix:document.getElementById('c-prix').value,qty:document.getElementById('c-qty').value||1,ou:document.getElementById('c-ou').value.trim(),done:false});['c-nom','c-prix','c-qty','c-ou'].forEach(id=>document.getElementById(id).value='');document.getElementById('ov-courses').classList.remove('open');save();toast('Ajouté à la liste !');}
-function toggleCourse(i){courses[i].done=!courses[i].done;save();}
-function deleteCourse(i){courses.splice(i,1);save();toast('Supprimé de la liste');}
-
-// ── EXPORT/IMPORT ──
-function exportJSON(){
-  const data={cave:bottles,courses,prefs:JSON.parse(localStorage.getItem('cave_prefs')||'{}'),exported:new Date().toISOString()};
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ma-cave-'+new Date().toISOString().slice(0,10)+'.json';a.click();
-  toast('Export téléchargé !');
-}
-function importJSON(e){
-  const file=e.target.files[0];if(!file)return;
-  const r=new FileReader();
-  r.onload=ev=>{
-    try{const d=JSON.parse(ev.target.result);if(d.cave&&Array.isArray(d.cave)){if(confirm(`Importer ${d.cave.length} bouteilles ? Cela remplacera votre cave.`)){bottles=d.cave;if(d.courses)courses=d.courses;if(d.prefs)localStorage.setItem('cave_prefs',JSON.stringify(d.prefs));save();toast('Import réussi !');}}else{toast('Fichier invalide');}}catch{toast('Erreur de lecture');}
-  };r.readAsText(file);e.target.value='';
-}
-function clearAll(){if(confirm('Effacer TOUTES les données ? Cette action est irréversible.')){bottles=[];courses=[];localStorage.removeItem('cave_v2');localStorage.removeItem('cave_courses');save();toast('Données effacées');}}
-
-// ── PREFS ──
-function savePrefs(){const prefs={regions:document.getElementById('p-regions').value,budget:document.getElementById('p-budget').value,style:document.getElementById('p-style').value};localStorage.setItem('cave_prefs',JSON.stringify(prefs));toast('Préférences enregistrées !');}
-function loadPrefs(){const p=JSON.parse(localStorage.getItem('cave_prefs')||'{}');if(p.regions)document.getElementById('p-regions').value=p.regions;if(p.budget)document.getElementById('p-budget').value=p.budget;if(p.style)document.getElementById('p-style').value=p.style;}
-
-// ── CLAUDE ──
-function askClaude(type){
-  const prefs=JSON.parse(localStorage.getItem('cave_prefs')||'{}');
-  const cave=bottles.slice(0,8).map(b=>`${b.nom} ${b.mil||''} (${b.couleur}, x${b.qty||1})`).join(', ');
-  const pt=prefs.regions?`Régions favorites : ${prefs.regions}. Budget : ${prefs.budget||'non défini'}. Style : ${prefs.style||'non défini'}.`:'';
-  const msgs={
-    accord:`Je gère ma cave à vin. ${pt} Ma cave : ${cave||'(vide)'}. Quel vin conseilles-tu pour mon repas ce soir ? (Précise le plat)`,
-    courses:`Je gère ma cave à vin. ${pt} Ma cave : ${cave||'(vide)'}. Fais une recherche sur les blogs et sites vin francophones et propose 5 bouteilles à commander ce mois-ci avec prix indicatifs et où les trouver.`,
-    suggest:`Je gère ma cave à vin. ${pt} Ma cave : ${cave||'(vide)'}. Fais une recherche web et propose 3 vins à découvrir hors de mes habitudes. Explique pourquoi ils pourraient me plaire.`,
-    actus:`Fais une recherche sur les sites vin francophones (RVF, iDealwine, etc.) et donne les actus vins du moment : bonnes affaires, millésimes à saisir, domaines en vogue. ${pt}`,
-    manque:`Je gère ma cave à vin. ${pt} Ma cave : ${cave||'(vide)'}. Analyse-la et dis-moi ce qui manque pour avoir une cave équilibrée.`
-  };
-  if(typeof sendPrompt==='function')sendPrompt(msgs[type]);
-  else{navigator.clipboard&&navigator.clipboard.writeText(msgs[type]).then(()=>toast('Question copiée — collez dans Claude !')).catch(()=>toast('Copiez la question dans Claude'));}
+function showAuthSuccess(msg) {
+  const el = document.getElementById('auth-success')
+  el.textContent = msg; el.classList.add('show')
+  document.getElementById('auth-error').classList.remove('show')
 }
 
-// ── DASHBOARD ──
-function buildDashboard(){
-  const el=document.getElementById('dashboard-body');
-  if(!bottles.length){el.innerHTML='<div class="empty-state"><i class="ti ti-chart-bar"></i><p>Ajoutez des bouteilles<br>pour voir vos statistiques</p></div>';return;}
-  const now=new Date().getFullYear();
-  const total=bottles.reduce((s,b)=>s+(parseInt(b.qty)||1),0);
-  const val=bottles.reduce((s,b)=>s+((parseInt(b.qty)||1)*(parseFloat(b.prix)||0)),0);
-  const avg=total>0?Math.round(val/total):0;
-  const byCouleur={rouge:0,blanc:0,rosé:0,bulle:0};
-  bottles.forEach(b=>{byCouleur[b.couleur||'rouge']=(byCouleur[b.couleur||'rouge']||0)+(parseInt(b.qty)||1);});
-  const byRegion={};
-  bottles.forEach(b=>{if(b.region){const r=b.region.split(',')[0].trim();byRegion[r]=(byRegion[r]||0)+(parseInt(b.qty)||1);}});
-  const topRegions=Object.entries(byRegion).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const maxR=topRegions.length?topRegions[0][1]:1;
-  const cColors={rouge:'#9B3A50',blanc:'#C4932A',rosé:'#D4537E',bulle:'#3B6D11'};
-  const cLabels={rouge:'Rouge',blanc:'Blanc',rosé:'Rosé',bulle:'Bulles'};
-  const totalC=Object.values(byCouleur).reduce((s,v)=>s+v,0)||1;
-  const circ=2*Math.PI*28;
-  let off=0;
-  const segs=Object.entries(byCouleur).filter(([,v])=>v>0).map(([c,v])=>{const s={c,v,pct:(v/totalC)*100,off};off+=s.pct;return s;});
-  const donut=`<svg width="70" height="70" viewBox="0 0 70 70"><circle cx="35" cy="35" r="28" fill="none" stroke="var(--bg3)" stroke-width="12"/>${segs.map(s=>`<circle cx="35" cy="35" r="28" fill="none" stroke="${cColors[s.c]}" stroke-width="12" stroke-dasharray="${(s.pct/100*circ).toFixed(1)} ${circ.toFixed(1)}" stroke-dashoffset="${(-(s.off/100*circ)+circ/4).toFixed(1)}"/>`).join('')}<text x="35" y="39" text-anchor="middle" font-size="13" font-weight="500" fill="var(--text)">${total}</text></svg>`;
-  const apogeeItems=bottles.filter(b=>b.ad&&b.af).map(b=>{const s=parseInt(b.ad),e=parseInt(b.af);let st,lb;if(now<s){st='wait';lb='À attendre';}else if(now>e){st='past';lb='Passé';}else if(e-now<=2){st='soon';lb='Bientôt fini';}else{st='now';lb='En apogée';}return{...b,st,lb};}).sort((a,b)=>{const o={now:0,soon:1,wait:2,past:3};return o[a.st]-o[b.st];});
-  el.innerHTML=`
-    <div class="stats-grid">
-      <div class="stat-dash"><div class="stat-dash-n">${total}</div><div class="stat-dash-l">bouteilles</div></div>
-      <div class="stat-dash"><div class="stat-dash-n">${bottles.length}</div><div class="stat-dash-l">références</div></div>
-      <div class="stat-dash"><div class="stat-dash-n">${Math.round(val)}€</div><div class="stat-dash-l">valeur estimée</div></div>
-      <div class="stat-dash"><div class="stat-dash-n">${avg}€</div><div class="stat-dash-l">prix moyen</div></div>
-    </div>
-    <div class="chart-row">
-      <div class="chart-box"><div class="chart-title">Par couleur</div><div class="donut-wrap">${donut}<div class="donut-legend">${Object.entries(byCouleur).filter(([,v])=>v>0).map(([c,v])=>`<div class="legend-item"><div class="legend-dot" style="background:${cColors[c]}"></div><span>${cLabels[c]} (${v})</span></div>`).join('')}</div></div></div>
-      <div class="chart-box"><div class="chart-title">Top régions</div>${topRegions.length?`<div>${topRegions.map(([r,v])=>`<div class="bar-item"><div class="bar-label">${r.length>7?r.slice(0,6)+'…':r}</div><div class="bar-track" style="flex:1"><div class="bar-fill" style="width:${Math.round(v/maxR*100)}%"></div></div><div class="bar-val">${v}</div></div>`).join('')}</div>`:'<div style="font-size:12px;color:var(--text3)">Ajoutez des régions</div>'}</div>
-    </div>
-    ${apogeeItems.length?`<div class="section-title">Fenêtres d'apogée</div><div>${apogeeItems.slice(0,6).map(b=>`<div class="apogee-item"><span class="apogee-name">${b.nom}${b.mil?' '+b.mil:''}</span><span class="apogee-badge badge-${b.st}">${b.lb}</span></div>`).join('')}</div><br>`:''}
-    <button class="claude-btn" onclick="askClaude('manque')"><i class="ti ti-sparkles"></i>Analyse complète par Claude ↗</button>`;
+function clearAuthMsg() {
+  document.getElementById('auth-error').classList.remove('show')
+  document.getElementById('auth-success').classList.remove('show')
 }
 
-// ── SCAN ──
-function handlePhoto(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    scanImgData=ev.target.result;
-    const b64=scanImgData.split(',')[1];
-    const mime=file.type||'image/jpeg';
-    document.getElementById('scan-preview').innerHTML=`<img src="${scanImgData}" style="width:100%;max-height:180px;object-fit:contain;border-radius:var(--radius);border:0.5px solid var(--border);margin-bottom:1rem">`;
-    document.getElementById('scan-step-main').style.display='none';
-    document.getElementById('scan-step-loading').style.display='block';
-    analyzeLabel(b64,mime);
-  };reader.readAsDataURL(file);e.target.value='';
-}
-const scanMsgs=['Identification du vin...','Lecture du millésime...','Recherche de l\'appellation...','Détection du cépage...'];
-let scanInterval;
-async function analyzeLabel(b64,mime){
-  let i=0;scanInterval=setInterval(()=>{document.getElementById('scan-sub').textContent=scanMsgs[i%scanMsgs.length];i++;},1200);
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mime,data:b64}},{type:'text',text:`Analyse cette étiquette de vin. Réponds UNIQUEMENT avec ce JSON sans markdown:\n{"nom":"string","domaine":"string","millesime":"number|null","region":"string","cepage":"string|null","couleur":"rouge|blanc|rosé|bulle","apogee_debut":"number|null","apogee_fin":"number|null","conf_nom":"haute|moyenne|basse","conf_mil":"haute|moyenne|basse","conf_reg":"haute|moyenne|basse"}`}]}]})});
-    clearInterval(scanInterval);
-    const data=await resp.json();
-    const txt=data.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
-    fillScanForm(JSON.parse(txt));
-  }catch(err){clearInterval(scanInterval);toast('Erreur d\'analyse');resetScan();}
-}
-function fillScanForm(w){
-  document.getElementById('sc-nom').value=w.nom||'';
-  document.getElementById('sc-domaine').value=w.domaine||'';
-  document.getElementById('sc-mil').value=w.millesime||'';
-  document.getElementById('sc-region').value=w.region||'';
-  document.getElementById('sc-cepage').value=w.cepage||'';
-  document.getElementById('sc-ad').value=w.apogee_debut||'';
-  document.getElementById('sc-af').value=w.apogee_fin||'';
-  document.getElementById('sc-qty').value=1;
-  if(scanImgData)document.getElementById('scan-thumb').src=scanImgData;
-  selScanCol=w.couleur||'rouge';
-  document.querySelectorAll('[id^="sco-"]').forEach(o=>o.classList.remove('sel'));
-  const t=document.getElementById('sco-'+selScanCol);if(t)t.classList.add('sel');
-  const cm={'haute':'conf-high','moyenne':'conf-med','basse':'conf-low'};
-  const cl={'haute':'sûr','moyenne':'probable','basse':'à vérifier'};
-  [['sc-conf-nom',w.conf_nom],['sc-conf-mil',w.conf_mil],['sc-conf-reg',w.conf_reg]].forEach(([id,c])=>{const el=document.getElementById(id);if(el&&c){el.className='conf '+(cm[c]||'conf-med');el.textContent=cl[c]||c;el.style.display='inline';}});
-  document.getElementById('scan-step-loading').style.display='none';
-  document.getElementById('scan-step-result').style.display='block';
-}
-function selScanColor(el,c){selScanCol=c;document.querySelectorAll('[id^="sco-"]').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
-function saveScan(){
-  const nom=document.getElementById('sc-nom').value.trim();if(!nom){toast('Le nom est requis');return;}
-  bottles.push({id:crypto.randomUUID(),nom,domaine:document.getElementById('sc-domaine').value.trim(),mil:document.getElementById('sc-mil').value,qty:parseInt(document.getElementById('sc-qty').value)||1,region:document.getElementById('sc-region').value.trim(),cepage:document.getElementById('sc-cepage').value.trim(),couleur:selScanCol,prix:document.getElementById('sc-prix').value,note:document.getElementById('sc-note').value,ad:document.getElementById('sc-ad').value,af:document.getElementById('sc-af').value});
-  save();toast('Bouteille ajoutée !');resetScan();showSection('cave',document.querySelectorAll('.nav-btn')[0]);
-}
-function resetScan(){scanImgData=null;document.getElementById('scan-step-main').style.display='block';document.getElementById('scan-step-loading').style.display='none';document.getElementById('scan-step-result').style.display='none';document.getElementById('scan-preview').innerHTML='';}
-
-// ── PIN ──
-function hashPin(pin){let h=0;for(let c of pin){h=((h<<5)-h)+c.charCodeAt(0);h|=0;}return h.toString(36);}
-function isPinSet(){return!!localStorage.getItem('cave_pin');}
-function updatePinDots(buf,mode){
-  for(let i=0;i<4;i++){const d=document.getElementById('d'+i);d.className='pin-dot'+(buf.length>i?' filled':'')+(mode==='error'?' error':'');}
-}
-function pinKey(k){
-  if(k==='del'){pinBuffer=pinBuffer.slice(0,-1);updatePinDots(pinBuffer,'');document.getElementById('pin-error').textContent='';return;}
-  if(k==='bio'){return;}
-  if(pinBuffer.length>=4)return;
-  pinBuffer+=k;
-  updatePinDots(pinBuffer,'');
-  if(pinBuffer.length===4){
-    setTimeout(()=>{
-      const stored=localStorage.getItem('cave_pin');
-      if(hashPin(pinBuffer)===stored){unlockApp();}
-      else{updatePinDots(pinBuffer,'error');document.getElementById('pin-error').textContent='Code incorrect, réessayez';pinBuffer='';setTimeout(()=>updatePinDots('',''),600);}
-    },200);
+window.doLogin = async function() {
+  const email = document.getElementById('login-email').value.trim()
+  const pwd = document.getElementById('login-pwd').value
+  if (!email || !pwd) { showAuthError('Remplissez tous les champs'); return }
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password: pwd })
+    if (error) throw error
+  } catch(e) {
+    showAuthError('Email ou mot de passe incorrect')
   }
 }
-function unlockApp(){
-  const ps=document.getElementById('pin-screen');
-  ps.classList.add('hide');
-  setTimeout(()=>{ps.style.display='none';},400);
-  document.getElementById('app').style.display='flex';
-}
-function showPinSetup(){
-  document.getElementById('pin-setup-title').textContent=isPinSet()?'Modifier le PIN':'Créer un code PIN';
-  document.getElementById('pin-setup-sub').textContent=isPinSet()?'Entrez votre nouveau code PIN.':'Choisissez un code PIN à 4 chiffres.';
-  document.getElementById('pin-new').value='';
-  document.getElementById('pin-confirm').value='';
-  document.getElementById('pin-setup-error').textContent='';
-  document.getElementById('pin-remove-btn').style.display=isPinSet()?'block':'none';
-  document.getElementById('ov-pin-setup').classList.add('open');
-}
-function savePinSetup(){
-  const np=document.getElementById('pin-new').value;
-  const cp=document.getElementById('pin-confirm').value;
-  if(!/^\d{4}$/.test(np)){document.getElementById('pin-setup-error').textContent='Le PIN doit contenir exactement 4 chiffres';return;}
-  if(np!==cp){document.getElementById('pin-setup-error').textContent='Les codes ne correspondent pas';return;}
-  localStorage.setItem('cave_pin',hashPin(np));
-  document.getElementById('ov-pin-setup').classList.remove('open');
-  updatePinStatus();
-  toast('PIN configuré !');
-}
-function removePin(){if(confirm('Supprimer le code PIN ?')){localStorage.removeItem('cave_pin');document.getElementById('ov-pin-setup').classList.remove('open');updatePinStatus();toast('PIN supprimé');}}
-function updatePinStatus(){
-  const set=isPinSet();
-  document.getElementById('pin-status-lbl').textContent=set?'Configuré — code actif':'Non configuré';
-  document.getElementById('pin-action-btn').textContent=set?'Modifier':'Configurer';
+
+window.doSignup = async function() {
+  const email = document.getElementById('signup-email').value.trim()
+  const pwd = document.getElementById('signup-pwd').value
+  const pwd2 = document.getElementById('signup-pwd2').value
+  if (!email || !pwd) { showAuthError('Remplissez tous les champs'); return }
+  if (pwd.length < 8) { showAuthError('Mot de passe trop court (8 caractères min.)'); return }
+  if (pwd !== pwd2) { showAuthError('Les mots de passe ne correspondent pas'); return }
+  try {
+    const { error } = await supabase.auth.signUp({ email, password: pwd })
+    if (error) throw error
+    showAuthSuccess('Compte créé ! Vérifiez votre email pour confirmer.')
+  } catch(e) {
+    showAuthError(e.message.includes('already') ? 'Email déjà utilisé' : 'Erreur lors de la création')
+  }
 }
 
-// ── INIT ──
-function init(){
-  const splash=document.getElementById('splash');
-  setTimeout(()=>{
-    splash.classList.add('hide');
-    setTimeout(()=>{
-      splash.style.display='none';
-      if(isPinSet()){
-        const ps=document.getElementById('pin-screen');
-        ps.style.display='flex';
-        document.getElementById('pin-title').textContent='Déverrouiller';
-        document.getElementById('pin-sub').textContent='Entrez votre code PIN';
-        document.getElementById('pin-setup-link').style.display='none';
+window.doForgot = async function() {
+  const email = document.getElementById('forgot-email').value.trim()
+  if (!email) { showAuthError('Entrez votre email'); return }
+  await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin })
+  showAuthSuccess('Email de réinitialisation envoyé !')
+}
+
+window.doLogout = async function() {
+  await supabase.auth.signOut()
+}
+
+// ── AUTH STATE ──
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if (event === 'SIGNED_IN' && session) {
+    currentUser = session.user
+    await loadUserData()
+    showApp()
+  } else if (event === 'SIGNED_OUT') {
+    currentUser = null
+    bottles = []; courses = []; prefs = {}
+    showAuth()
+  }
+})
+
+async function loadUserData() {
+  const [bRes, cRes, pRes] = await Promise.all([
+    supabase.from('bouteilles').select('*').order('created_at', { ascending:false }),
+    supabase.from('courses').select('*').order('created_at', { ascending:false }),
+    supabase.from('preferences').select('*').eq('user_id', currentUser.id).single()
+  ])
+  bottles = bRes.data || []
+  courses = cRes.data || []
+  prefs = pRes.data || {}
+  document.getElementById('user-email-lbl').textContent = currentUser.email
+  loadPrefsUI()
+  updateStats()
+  renderBottles()
+  renderCourses()
+  updatePinStatus()
+
+  // Realtime
+  supabase.channel('db-changes')
+    .on('postgres_changes', { event:'*', schema:'public', table:'bouteilles' }, async () => {
+      const { data } = await supabase.from('bouteilles').select('*').order('created_at', { ascending:false })
+      bottles = data || []
+      updateStats(); renderBottles()
+    })
+    .on('postgres_changes', { event:'*', schema:'public', table:'courses' }, async () => {
+      const { data } = await supabase.from('courses').select('*').order('created_at', { ascending:false })
+      courses = data || []
+      renderCourses()
+    })
+    .subscribe()
+}
+
+// ── SHOW SCREENS ──
+function showAuth() {
+  document.getElementById('auth-screen').classList.add('show')
+  document.getElementById('app').classList.remove('show')
+  document.getElementById('onboarding').classList.remove('show')
+  document.getElementById('pin-screen').classList.remove('show')
+}
+
+function showApp() {
+  document.getElementById('auth-screen').classList.remove('show')
+  const pinHash = localStorage.getItem('cave_pin')
+  if (pinHash) {
+    document.getElementById('pin-screen').classList.add('show')
+    document.getElementById('pin-setup-link').style.display = 'none'
+    pinBuffer = ''
+    updatePinDots('')
+  } else {
+    launchApp()
+  }
+}
+
+async function launchApp() {
+  document.getElementById('pin-screen').classList.remove('show')
+  // Check onboarding
+  const done = prefs.onboarding_done
+  if (!done) {
+    showOnboarding()
+  } else {
+    document.getElementById('app').classList.add('show')
+  }
+}
+
+window.showOnboarding = function() {
+  document.getElementById('onboarding').classList.add('show')
+  document.getElementById('app').classList.remove('show')
+  obStep = 0
+  renderObStep()
+}
+
+// ── ONBOARDING ──
+function renderObStep() {
+  const slides = document.getElementById('ob-slides')
+  slides.style.transform = `translateX(-${obStep*100}%)`
+  document.getElementById('ob-step-lbl').textContent = `${obStep+1} / 3`
+  document.getElementById('ob-next-btn').textContent = obStep===2 ? "C'est parti !" : 'Suivant'
+  for(let i=0;i<3;i++) {
+    document.getElementById(`ob-dot-${i}`).classList.toggle('active', i===obStep)
+  }
+}
+
+window.obNext = async function() {
+  if (obStep < 2) { obStep++; renderObStep() }
+  else { await finishOnboarding() }
+}
+
+window.finishOnboarding = async function() {
+  document.getElementById('onboarding').classList.remove('show')
+  document.getElementById('app').classList.add('show')
+  if (currentUser) {
+    await supabase.from('preferences').upsert({
+      user_id: currentUser.id, onboarding_done: true
+    })
+    prefs.onboarding_done = true
+  }
+}
+
+// ── PIN ──
+window.pinKey = function(k) {
+  if (pinBlockedUntil && Date.now() < pinBlockedUntil) {
+    const s = Math.ceil((pinBlockedUntil-Date.now())/1000)
+    document.getElementById('pin-err').textContent = `Bloqué. Réessayez dans ${s}s`
+    return
+  }
+  if (k==='del') { pinBuffer=pinBuffer.slice(0,-1); updatePinDots(''); document.getElementById('pin-err').textContent=''; return }
+  if (pinBuffer.length>=4) return
+  pinBuffer+=k
+  updatePinDots('')
+  if (pinBuffer.length===4) {
+    setTimeout(() => {
+      const stored = localStorage.getItem('cave_pin')
+      if (hashPin(pinBuffer)===stored) {
+        pinAttempts=0; pinBuffer=''
+        updatePinDots('')
+        launchApp()
       } else {
-        document.getElementById('app').style.display='flex';
+        pinAttempts++
+        if (pinAttempts>=3) {
+          pinBlockedUntil = Date.now()+30000; pinAttempts=0
+          document.getElementById('pin-err').textContent = 'Trop de tentatives — bloqué 30 secondes'
+        } else {
+          document.getElementById('pin-err').textContent = 'Code incorrect'
+        }
+        updatePinDots('error')
+        setTimeout(() => { pinBuffer=''; updatePinDots('') }, 600)
       }
-    },500);
-  },1900);
-  updateStats();renderBottles();renderCourses();loadPrefs();updatePinStatus();
+    }, 200)
+  }
 }
 
-init();
-</script>
-</body>
-</html>
+function updatePinDots(mode) {
+  for(let i=0;i<4;i++) {
+    const d = document.getElementById('pd'+i)
+    d.className = 'pin-dot' + (pinBuffer.length>i?' filled':'') + (mode==='error'?' error':'')
+  }
+}
+
+window.openPinSetup = function() {
+  const has = !!localStorage.getItem('cave_pin')
+  document.getElementById('pin-setup-title').textContent = has ? 'Modifier le PIN' : 'Créer un code PIN'
+  document.getElementById('pin-new').value=''; document.getElementById('pin-confirm').value=''
+  document.getElementById('pin-setup-error').textContent=''
+  document.getElementById('pin-remove-btn').style.display = has?'block':'none'
+  document.getElementById('ov-pin-setup').classList.add('open')
+}
+
+window.savePinSetup = function() {
+  const np = document.getElementById('pin-new').value
+  const cp = document.getElementById('pin-confirm').value
+  if (!/^\d{4}$/.test(np)) { document.getElementById('pin-setup-error').textContent='PIN doit contenir 4 chiffres'; return }
+  if (np!==cp) { document.getElementById('pin-setup-error').textContent='Les codes ne correspondent pas'; return }
+  localStorage.setItem('cave_pin', hashPin(np))
+  document.getElementById('ov-pin-setup').classList.remove('open')
+  updatePinStatus()
+  toast('PIN configuré !', 'success')
+}
+
+window.removePinSetup = function() {
+  localStorage.removeItem('cave_pin')
+  document.getElementById('ov-pin-setup').classList.remove('open')
+  updatePinStatus(
