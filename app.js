@@ -2,7 +2,7 @@
 // MA CAVE À VIN — App principale
 // Architecture B — Supabase + Claude
 // ═══════════════════════════════════════
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/+esm'
 
 const SUPA_URL = 'https://oqmfdhngzfdpcrlrwtob.supabase.co'
 const SUPA_KEY = 'sb_publishable_HBqxiga3cvRaagqEVLaj0g_oI0mYfcSjJN6'
